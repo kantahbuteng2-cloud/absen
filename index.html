@@ -1,0 +1,2819 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <base target="_top">
+  
+  <!-- ====== PWA METADATA ====== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1976d2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Absensi Apel">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="msapplication-TileColor" content="#1976d2">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="description" content="Sistem Absensi Apel Digital Lapas Baubau">
+  
+  <!-- ====== PWA ICONS ====== -->
+  <link rel="icon" href="https://cdn.jsdelivr.net/npm/@mdi/svg@6.5.95/svg/calendar-check.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/npm/@mdi/svg@6.5.95/svg/calendar-check.svg">
+  
+  <!-- ====== EXTERNAL LIBRARIES ====== -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ====== MOBILE-FIRST STYLING ====== */
+    :root {
+      --primary: #1976d2;
+      --primary-dark: #0d47a1;
+      --primary-light: #bbdefb;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --danger: #f44336;
+      --light: #ffffff;
+      --dark: #121212;
+      --gray: #666666;
+      --gray-light: #e0e0e0;
+      --card-bg: #ffffff;
+      --surface: #f8f9fa;
+      
+      /* Mobile Spacing */
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 12px;
+      --spacing-lg: 16px;
+      --spacing-xl: 20px;
+      --spacing-xxl: 24px;
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-round: 999px;
+      
+      /* Shadows untuk mobile */
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+      --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+      --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      
+      /* Animations */
+      --transition-fast: 150ms ease;
+      --transition-normal: 250ms ease;
+      --transition-slow: 350ms ease;
+    }
+    
+    /* Reset untuk mobile */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    html {
+      font-size: 14px; /* Base font size untuk mobile */
+      height: 100%;
+      overflow-x: hidden;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: var(--dark);
+      min-height: 100vh;
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Safe area untuk notch phones */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--surface);
+      z-index: -2;
+    }
+    
+    /* Container utama - FULL SCREEN MOBILE */
+    .app-container {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    /* ====== HEADER MOBILE ====== */
+    .app-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: var(--spacing-lg);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-lg);
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      padding-top: calc(var(--spacing-lg) + env(safe-area-inset-top, 0px));
+    }
+    
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-md);
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+    
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-round);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .app-info h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 2px;
+      color: white;
+    }
+    
+    .app-info p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+    
+    /* Action buttons di header */
+    .header-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+    
+    .header-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-round);
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+    
+    .header-btn:active {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(0.95);
+    }
+    
+    /* DateTime display */
+    .datetime-display {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: var(--radius-round);
+      padding: 8px 16px;
+      margin-top: var(--spacing-md);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* ====== MAIN CONTENT ====== */
+    .app-main {
+      flex: 1;
+      padding: var(--spacing-lg);
+      padding-bottom: calc(var(--spacing-lg) + 80px); /* Space untuk bottom nav */
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* User Card untuk mobile */
+    .user-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-light);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+      animation: slideIn 0.3s ease;
+    }
+    
+    .user-avatar {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: var(--radius-round);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      border: 3px solid white;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .user-details {
+      flex: 1;
+      min-width: 0; /* Untuk ellipsis */
+    }
+    
+    .user-details h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .user-info-row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin-bottom: 2px;
+    }
+    
+    .user-info-row .label {
+      font-size: 0.85rem;
+      color: var(--gray);
+      font-weight: 500;
+    }
+    
+    .user-info-row .value {
+      font-size: 0.9rem;
+      color: var(--dark);
+      font-weight: 600;
+    }
+    
+    /* Status Badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: var(--radius-round);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .status-active {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+    
+    .status-inactive {
+      background: rgba(255, 152, 0, 0.1);
+      color: var(--warning);
+      border: 1px solid rgba(255, 152, 0, 0.3);
+    }
+    
+    /* ====== STATS GRID MOBILE ====== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-light);
+      transition: var(--transition-normal);
+    }
+    
+    .stat-card:active {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-round);
+      background: rgba(25, 118, 210, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--spacing-sm);
+      font-size: 1.4rem;
+      color: var(--primary);
+    }
+    
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--gray);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    
+    /* ====== SCANNER SECTION MOBILE ====== */
+    .scanner-section {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-light);
+    }
+    
+    .scanner-header {
+      background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+      color: white;
+      padding: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+    
+    .scanner-header i {
+      font-size: 1.5rem;
+      color: #4CAF50;
+    }
+    
+    .scanner-header h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    
+    .scanner-container {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background: #000;
+      overflow: hidden;
+    }
+    
+    #reader {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    
+    #reader video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover;
+    }
+    
+    #reader__scan_region {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    
+    /* Scanner overlay untuk mobile */
+    .scanner-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+    
+    .scan-frame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 220px;
+      height: 220px;
+      border: 2px solid #4CAF50;
+      border-radius: var(--radius-md);
+      box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.7);
+    }
+    
+    .scan-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #4CAF50;
+    }
+    
+    .corner-tl {
+      top: -3px;
+      left: -3px;
+      border-right: none;
+      border-bottom: none;
+      border-radius: 8px 0 0 0;
+    }
+    
+    .corner-tr {
+      top: -3px;
+      right: -3px;
+      border-left: none;
+      border-bottom: none;
+      border-radius: 0 8px 0 0;
+    }
+    
+    .corner-bl {
+      bottom: -3px;
+      left: -3px;
+      border-right: none;
+      border-top: none;
+      border-radius: 0 0 0 8px;
+    }
+    
+    .corner-br {
+      bottom: -3px;
+      right: -3px;
+      border-left: none;
+      border-top: none;
+      border-radius: 0 0 8px 0;
+    }
+    
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #4CAF50, transparent);
+      animation: scan 2s linear infinite;
+      border-radius: var(--radius-round);
+    }
+    
+    @keyframes scan {
+      0% { top: 0; }
+      100% { top: 100%; }
+    }
+    
+    /* Scanner instructions mobile */
+    .scanner-instructions {
+      background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+      color: white;
+      padding: var(--spacing-lg);
+      text-align: center;
+    }
+    
+    .instruction-text {
+      font-size: 0.95rem;
+      margin-bottom: var(--spacing-md);
+      line-height: 1.4;
+    }
+    
+    .instruction-highlight {
+      color: #4CAF50;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .instruction-steps {
+      display: flex;
+      justify-content: space-around;
+      gap: var(--spacing-sm);
+    }
+    
+    .instruction-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+    
+    .step-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-round);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: #4CAF50;
+    }
+    
+    .step-text {
+      font-size: 0.75rem;
+      opacity: 0.9;
+      text-align: center;
+      line-height: 1.2;
+    }
+    
+    /* ====== ACTION BUTTONS MOBILE ====== */
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+      border: none;
+      border-radius: var(--radius-lg);
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      text-decoration: none;
+      box-shadow: var(--shadow-md);
+      min-height: 52px;
+      letter-spacing: 0.3px;
+    }
+    
+    .btn:active {
+      transform: translateY(2px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+    }
+    
+    .btn-primary:active {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, var(--success) 0%, #2e7d32 100%);
+      color: white;
+    }
+    
+    .btn-warning {
+      background: linear-gradient(135deg, var(--warning) 0%, #ef6c00 100%);
+      color: white;
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger) 0%, #c62828 100%);
+      color: white;
+    }
+    
+    .btn i {
+      font-size: 1.2rem;
+    }
+    
+    /* ====== REGISTRATION SCREEN MOBILE ====== */
+    .registration-screen {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .registration-header {
+      background: linear-gradient(135deg, #4CAF50 0%, #2e7d32 100%);
+      color: white;
+      padding: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+    
+    .registration-header i {
+      font-size: 1.5rem;
+    }
+    
+    .registration-body {
+      padding: var(--spacing-lg);
+    }
+    
+    .form-group {
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: var(--spacing-sm);
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 0.95rem;
+    }
+    
+    .input-container {
+      position: relative;
+    }
+    
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      font-size: 1.2rem;
+      z-index: 1;
+    }
+    
+    input {
+      width: 100%;
+      padding: 16px 16px 16px 48px;
+      border: 2px solid var(--gray-light);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-family: inherit;
+      background: var(--light);
+      color: var(--dark);
+      transition: var(--transition-fast);
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+    }
+    
+    input:read-only {
+      background: var(--surface);
+      color: var(--gray);
+      cursor: not-allowed;
+    }
+    
+    .form-hint {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: var(--gray);
+      line-height: 1.3;
+    }
+    
+    /* ====== BOTTOM NAVIGATION MOBILE ====== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      border-top: 1px solid var(--gray-light);
+      padding: var(--spacing-md) var(--spacing-lg);
+      padding-bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px));
+      z-index: 1000;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: var(--gray);
+      transition: var(--transition-fast);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      min-width: 64px;
+    }
+    
+    .nav-item:active {
+      background: rgba(25, 118, 210, 0.1);
+      color: var(--primary);
+    }
+    
+    .nav-item.active {
+      color: var(--primary);
+    }
+    
+    .nav-icon {
+      font-size: 1.4rem;
+    }
+    
+    .nav-text {
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    /* ====== LOADING SCREEN MOBILE ====== */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: var(--spacing-xl);
+      text-align: center;
+    }
+    
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid white;
+      border-radius: var(--radius-round);
+      animation: spin 1s linear infinite;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .loading-subtext {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+      max-width: 300px;
+    }
+    
+    /* ====== TOAST NOTIFICATION MOBILE ====== */
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 90%;
+      animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+      from {
+        transform: translateX(-50%) translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .toast i {
+      font-size: 1.2rem;
+    }
+    
+    .toast-success {
+      background: linear-gradient(135deg, var(--success) 0%, #2e7d32 100%);
+    }
+    
+    .toast-error {
+      background: linear-gradient(135deg, var(--danger) 0%, #c62828 100%);
+    }
+    
+    .toast-warning {
+      background: linear-gradient(135deg, var(--warning) 0%, #ef6c00 100%);
+    }
+    
+    /* ====== SISA KESEMPATAN BADGE ====== */
+    .chance-badge {
+      position: absolute;
+      top: var(--spacing-md);
+      right: var(--spacing-md);
+      background: linear-gradient(135deg, var(--success) 0%, #2e7d32 100%);
+      color: white;
+      padding: 6px 12px;
+      border-radius: var(--radius-round);
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: var(--shadow-md);
+      z-index: 3;
+      border: 2px solid white;
+    }
+    
+    .chance-badge.warning {
+      background: linear-gradient(135deg, var(--warning) 0%, #ef6c00 100%);
+    }
+    
+    .chance-badge.danger {
+      background: linear-gradient(135deg, var(--danger) 0%, #c62828 100%);
+    }
+    
+    /* ====== SCANNER MESSAGE ====== */
+    .scanner-message {
+      position: absolute;
+      top: var(--spacing-md);
+      left: var(--spacing-md);
+      right: var(--spacing-md);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      border-left: 4px solid var(--success);
+      z-index: 3;
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .message-content {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+    
+    .message-icon {
+      font-size: 1.5rem;
+      color: var(--success);
+    }
+    
+    .message-text h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+    
+    .message-text p {
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+    
+    /* ====== COOKIE BANNER MOBILE ====== */
+    .cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+      color: white;
+      padding: var(--spacing-lg);
+      z-index: 9999;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+      animation: slideUp 0.3s ease;
+      padding-bottom: calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+    
+    .cookie-content {
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .cookie-text {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .cookie-actions {
+      display: flex;
+      gap: var(--spacing-md);
+    }
+    
+    .cookie-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+    
+    .cookie-btn-accept {
+      background: white;
+      color: var(--primary);
+    }
+    
+    .cookie-btn-accept:active {
+      background: #f0f0f0;
+    }
+    
+    .cookie-btn-decline {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .cookie-btn-decline:active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* ====== SPLASH SCREEN ====== */
+    .splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      animation: fadeOut 0.5s ease 1.5s forwards;
+    }
+    
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+    
+    .splash-logo {
+      width: 100px;
+      height: 100px;
+      background: white;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    .splash-logo i {
+      font-size: 3rem;
+      color: var(--primary);
+    }
+    
+    .splash-text {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin-bottom: var(--spacing-sm);
+      animation: fadeInUp 0.5s ease 0.2s both;
+    }
+    
+    .splash-subtext {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1rem;
+      text-align: center;
+      animation: fadeInUp 0.5s ease 0.4s both;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* ====== UTILITY CLASSES ====== */
+    .d-none {
+      display: none !important;
+    }
+    
+    .d-flex {
+      display: flex !important;
+    }
+    
+    .text-center {
+      text-align: center !important;
+    }
+    
+    .mt-1 { margin-top: var(--spacing-sm); }
+    .mt-2 { margin-top: var(--spacing-md); }
+    .mt-3 { margin-top: var(--spacing-lg); }
+    .mb-1 { margin-bottom: var(--spacing-sm); }
+    .mb-2 { margin-bottom: var(--spacing-md); }
+    .mb-3 { margin-bottom: var(--spacing-lg); }
+    
+    .w-100 { width: 100%; }
+    .h-100 { height: 100%; }
+    
+    /* ====== DARK MODE SUPPORT ====== */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --light: #1e1e1e;
+        --dark: #ffffff;
+        --gray: #aaaaaa;
+        --gray-light: #333333;
+        --card-bg: #2d2d2d;
+        --surface: #1a1a1a;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+      }
+      
+      input {
+        background: #333333;
+        color: white;
+        border-color: #444444;
+      }
+      
+      .scanner-header,
+      .registration-header {
+        background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+      }
+    }
+    
+    /* ====== LANDSCAPE ORIENTATION ====== */
+    @media (orientation: landscape) and (max-height: 600px) {
+      html {
+        font-size: 12px;
+      }
+      
+      .scanner-container {
+        height: 200px;
+      }
+      
+      .app-main {
+        padding-bottom: 60px;
+      }
+      
+      .bottom-nav {
+        padding: 8px 12px;
+      }
+      
+      .nav-text {
+        display: none;
+      }
+      
+      .nav-icon {
+        font-size: 1.6rem;
+      }
+      
+      .splash-screen {
+        animation-duration: 1s;
+      }
+    }
+    
+    /* ====== TABLET SUPPORT (min-width: 768px) ====== */
+    @media (min-width: 768px) {
+      html {
+        font-size: 16px;
+      }
+      
+      .app-container {
+        max-width: 768px;
+        margin: 0 auto;
+        border-radius: 0;
+      }
+      
+      .scanner-container {
+        height: 350px;
+      }
+      
+      .scan-frame {
+        width: 300px;
+        height: 300px;
+      }
+    }
+    
+    /* ====== VERY SMALL PHONES (max-width: 320px) ====== */
+    @media (max-width: 320px) {
+      html {
+        font-size: 13px;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        text-align: center;
+      }
+      
+      .header-actions {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+      }
+      
+      .action-buttons {
+        grid-template-columns: 1fr;
+      }
+      
+      .instruction-steps {
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splashScreen" class="splash-screen">
+    <div class="splash-logo">
+      <i class="fas fa-calendar-check"></i>
+    </div>
+    <div class="splash-text">ABSENSI APEL</div>
+    <div class="splash-subtext">Lapas Kelas IIB Baubau</div>
+  </div>
+  
+  <!-- App Container -->
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo-container">
+          <div class="logo-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="app-info">
+            <h1>ABSENSI APEL</h1>
+            <p>Lapas Kelas IIB Baubau</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="logoutBtn" class="header-btn d-none" title="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+          <button id="refreshBtn" class="header-btn" title="Refresh Scanner">
+            <i class="fas fa-redo-alt"></i>
+          </button>
+        </div>
+      </div>
+      <div id="datetime" class="datetime-display"></div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="app-main" id="mainContent">
+      <!-- Loading Screen -->
+      <div id="loadingScreen" class="loading-screen d-none">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Memuat...</div>
+        <div class="loading-subtext">Harap tunggu sebentar</div>
+      </div>
+      
+      <!-- Scanner Screen -->
+      <div id="scannerScreen" class="d-none">
+        <!-- User Info Card -->
+        <div id="userInfoCard" class="user-card d-none">
+          <div class="user-avatar">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="user-details">
+            <h3 id="userName">Nama Pegawai</h3>
+            <div class="user-info-row">
+              <span class="label">NIP:</span>
+              <span class="value" id="userNip">-</span>
+            </div>
+            <div class="user-info-row">
+              <span class="label">Status:</span>
+              <span class="status-badge status-inactive" id="userStatus">Belum Terdaftar</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-label">WAKTU</div>
+            <div class="stat-value" id="currentTime">--:--</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-calendar-day"></i>
+            </div>
+            <div class="stat-label">TANGGAL</div>
+            <div class="stat-value" id="currentDate">-- --- ----</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="stat-label">LOKASI</div>
+            <div class="stat-value" id="locationStatus">--</div>
+          </div>
+        </div>
+        
+        <!-- Scanner Section -->
+        <div class="scanner-section">
+          <!-- Chance Badge -->
+          <div id="sisaKesempatanBadge" class="chance-badge d-none">
+            <i class="fas fa-history"></i>
+            <span>Sisa: <span id="sisaKesempatanCount">2</span>/2</span>
+          </div>
+          
+          <!-- Scanner Message -->
+          <div id="scannerMessage" class="scanner-message d-none">
+            <div class="message-content">
+              <div class="message-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="message-text">
+                <h4>Absensi Lengkap</h4>
+                <p>Anda sudah absen 2 kali hari ini</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="scanner-header">
+            <i class="fas fa-qrcode"></i>
+            <h3>SCAN QR CODE APEL</h3>
+          </div>
+          
+          <div class="scanner-container">
+            <div id="reader"></div>
+            
+            <!-- Scanner Overlay -->
+            <div class="scanner-overlay">
+              <div class="scan-frame">
+                <div class="scan-corner corner-tl"></div>
+                <div class="scan-corner corner-tr"></div>
+                <div class="scan-corner corner-bl"></div>
+                <div class="scan-corner corner-br"></div>
+                <div class="scan-line"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="scanner-instructions">
+            <div class="instruction-highlight">
+              <i class="fas fa-info-circle"></i>
+              ARAHKAN KAMERA KE QR CODE
+            </div>
+            <div class="instruction-text">
+              Posisikan QR Code dalam area kamera
+            </div>
+            <div class="instruction-steps">
+              <div class="instruction-step">
+                <div class="step-icon">
+                  <i class="fas fa-qrcode"></i>
+                </div>
+                <div class="step-text">Scan QR</div>
+              </div>
+              <div class="instruction-step">
+                <div class="step-icon">
+                  <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="step-text">Cahaya Cukup</div>
+              </div>
+              <div class="instruction-step">
+                <div class="step-icon">
+                  <i class="fas fa-hand-steady"></i>
+                </div>
+                <div class="step-text">Tangan Stabil</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button id="registerBtn" class="btn btn-warning">
+            <i class="fas fa-user-plus"></i>
+            DAFTAR AKUN
+          </button>
+          <button id="manualBtn" class="btn btn-primary">
+            <i class="fas fa-keyboard"></i>
+            INPUT MANUAL
+          </button>
+        </div>
+      </div>
+      
+      <!-- Registration Screen -->
+      <div id="registerScreen" class="registration-screen d-none">
+        <div class="registration-header">
+          <i class="fas fa-user-plus"></i>
+          <h3>PENDAFTARAN AKUN BARU</h3>
+        </div>
+        <div class="registration-body">
+          <div class="user-card" style="background: #e8f5e9; border-color: #4CAF50;">
+            <div class="user-avatar" style="background: #4CAF50;">
+              <i class="fas fa-user-edit"></i>
+            </div>
+            <div class="user-details">
+              <h3 style="color: #2e7d32;">Pendaftaran Pegawai</h3>
+              <div class="user-info-row">
+                <span class="label">Masukkan NIP Anda untuk mendaftar</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="regNip">
+              <i class="fas fa-id-card"></i>
+              NIP PEGAWAI
+            </label>
+            <div class="input-container">
+              <i class="input-icon fas fa-id-card"></i>
+              <input type="text" id="regNip" placeholder="Contoh: 197001012000011001" maxlength="20">
+            </div>
+            <span class="form-hint">Masukkan NIP sesuai yang terdaftar di Lapas Baubau</span>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-info-circle"></i>
+              INFORMASI PERANGKAT
+            </label>
+            <div class="input-container">
+              <i class="input-icon fas fa-mobile-alt"></i>
+              <input type="text" id="regDeviceId" readonly>
+            </div>
+            <span class="form-hint">ID unik perangkat Anda untuk keamanan</span>
+          </div>
+          
+          <div class="action-buttons">
+            <button id="submitRegisterBtn" class="btn btn-success">
+              <i class="fas fa-check-circle"></i>
+              DAFTARKAN AKUN
+            </button>
+            <button id="backToScannerBtn" class="btn btn-primary">
+              <i class="fas fa-arrow-left"></i>
+              KEMBALI
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="#" class="nav-item active" id="navHome">
+        <i class="nav-icon fas fa-home"></i>
+        <span class="nav-text">Home</span>
+      </a>
+      <a href="#" class="nav-item" id="navHistory">
+        <i class="nav-icon fas fa-history"></i>
+        <span class="nav-text">Riwayat</span>
+      </a>
+      <a href="#" class="nav-item" id="navScanner">
+        <i class="nav-icon fas fa-qrcode"></i>
+        <span class="nav-text">Scanner</span>
+      </a>
+      <a href="#" class="nav-item" id="navProfile">
+        <i class="nav-icon fas fa-user"></i>
+        <span class="nav-text">Profil</span>
+      </a>
+    </nav>
+  </div>
+  
+  <!-- Cookie Banner -->
+  <div id="cookieBanner" class="cookie-banner d-none">
+    <div class="cookie-content">
+      <p class="cookie-text">
+        <i class="fas fa-cookie-bite"></i>
+        Sistem ini menggunakan penyimpanan lokal perangkat untuk menyimpan data login Anda. 
+        Data hanya disimpan di perangkat Anda dan tidak dikirim ke server lain.
+      </p>
+    </div>
+    <div class="cookie-actions">
+      <button id="cookieAccept" class="cookie-btn cookie-btn-accept">Terima</button>
+      <button id="cookieDecline" class="cookie-btn cookie-btn-decline">Tolak</button>
+    </div>
+  </div>
+  
+  <!-- Toast Notification -->
+  <div id="toast" class="toast d-none"></div>
+
+  <script>
+    // ====== PWA MANIFEST EMULATION ======
+    // Karena tidak bisa buat file .json, kita simulasikan dengan meta tags
+    function setupPWA() {
+      // Add PWA meta tags dynamically
+      const metaTags = [
+        { name: 'application-name', content: 'Absensi Apel' },
+        { name: 'apple-mobile-web-app-title', content: 'Absensi Apel' },
+        { name: 'msapplication-TileImage', content: 'https://cdn.jsdelivr.net/npm/@mdi/svg@6.5.95/svg/calendar-check.svg' }
+      ];
+      
+      metaTags.forEach(tag => {
+        const meta = document.createElement('meta');
+        meta.name = tag.name;
+        meta.content = tag.content;
+        document.head.appendChild(meta);
+      });
+      
+      // Set theme color
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1976d2');
+      
+      console.log('PWA setup complete');
+    }
+    
+    // ====== MOBILE-OPTIMIZED JAVASCRIPT ======
+    // Global variables
+    let userData = null;
+    let html5QrCode = null;
+    let currentApelType = null;
+    let isScannerRunning = false;
+    let isAutoLoginAttempted = false;
+    
+    // DOM Elements
+    const splashScreen = document.getElementById('splashScreen');
+    const loadingScreen = document.getElementById('loadingScreen');
+    const scannerScreen = document.getElementById('scannerScreen');
+    const registerScreen = document.getElementById('registerScreen');
+    const userInfoCard = document.getElementById('userInfoCard');
+    const userName = document.getElementById('userName');
+    const userNip = document.getElementById('userNip');
+    const userStatus = document.getElementById('userStatus');
+    const currentTime = document.getElementById('currentTime');
+    const currentDate = document.getElementById('currentDate');
+    const locationStatus = document.getElementById('locationStatus');
+    const datetimeElement = document.getElementById('datetime');
+    const registerBtn = document.getElementById('registerBtn');
+    const manualBtn = document.getElementById('manualBtn');
+    const regNip = document.getElementById('regNip');
+    const regDeviceId = document.getElementById('regDeviceId');
+    const submitRegisterBtn = document.getElementById('submitRegisterBtn');
+    const backToScannerBtn = document.getElementById('backToScannerBtn');
+    const sisaKesempatanBadge = document.getElementById('sisaKesempatanBadge');
+    const sisaKesempatanCount = document.getElementById('sisaKesempatanCount');
+    const scannerMessage = document.getElementById('scannerMessage');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const loadingText = document.getElementById('loadingText');
+    const cookieBanner = document.getElementById('cookieBanner');
+    const cookieAccept = document.getElementById('cookieAccept');
+    const cookieDecline = document.getElementById('cookieDecline');
+    const toast = document.getElementById('toast');
+    
+    // Navigation elements
+    const navHome = document.getElementById('navHome');
+    const navHistory = document.getElementById('navHistory');
+    const navScanner = document.getElementById('navScanner');
+    const navProfile = document.getElementById('navProfile');
+    
+    // Storage Keys
+    const STORAGE_KEYS = {
+      USER_DATA: 'absensi_apel_user_data',
+      DEVICE_ID: 'absensi_apel_device_id',
+      COOKIE_CONSENT: 'absensi_apel_cookie_consent',
+      LAST_LOGIN: 'absensi_apel_last_login',
+      PWA_INSTALLED: 'absensi_apel_pwa_installed'
+    };
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Mobile-First Absensi Apel System Loading...');
+      
+      // Setup PWA
+      setupPWA();
+      
+      // Hide splash screen setelah 1.5 detik
+      setTimeout(() => {
+        splashScreen.style.display = 'none';
+        initializeApp();
+      }, 1500);
+      
+      // Setup event listeners
+      setupEventListeners();
+      
+      // Check if installed as PWA
+      checkPWAInstallation();
+    });
+    
+    // Check if installed as PWA
+    function checkPWAInstallation() {
+      if (window.matchMedia('(display-mode: standalone)').matches || 
+          window.navigator.standalone === true) {
+        console.log('Running as PWA');
+        localStorage.setItem(STORAGE_KEYS.PWA_INSTALLED, 'true');
+      }
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+      // Navigation
+      navHome.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveNav('home');
+        showScannerScreen();
+      });
+      
+      navScanner.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveNav('scanner');
+        showScannerScreen();
+      });
+      
+      navHistory.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveNav('history');
+        showHistory();
+      });
+      
+      navProfile.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveNav('profile');
+        if (userData && userData.nip) {
+          showUserProfile();
+        } else {
+          showToast('Silakan login terlebih dahulu', 'warning');
+        }
+      });
+      
+      // Button events
+      registerBtn.addEventListener('click', showRegistrationScreen);
+      manualBtn.addEventListener('click', () => {
+        showToast('Fitur input manual dalam pengembangan', 'info');
+      });
+      refreshBtn.addEventListener('click', refreshScanner);
+      logoutBtn.addEventListener('click', logoutUser);
+      submitRegisterBtn.addEventListener('click', submitRegistration);
+      backToScannerBtn.addEventListener('click', showScannerScreen);
+      cookieAccept.addEventListener('click', acceptCookies);
+      cookieDecline.addEventListener('click', declineCookies);
+      
+      // Input events
+      regNip.addEventListener('input', function(e) {
+        this.value = this.value.replace(/\D/g, '');
+      });
+      
+      // Online/offline detection
+      window.addEventListener('online', function() {
+        showToast('Koneksi internet dipulihkan', 'success');
+        if (userData && userData.nip) {
+          updateStatusAbsensi();
+        }
+      });
+      
+      window.addEventListener('offline', function() {
+        showToast('Koneksi internet terputus', 'warning');
+      });
+      
+      // Visibility change
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && scannerScreen.classList.contains('d-none') === false) {
+          if (!isScannerRunning) {
+            setTimeout(startScanner, 1000);
+          }
+        }
+      });
+      
+      // Back button handling for Android
+      window.addEventListener('popstate', function(e) {
+        if (!registerScreen.classList.contains('d-none')) {
+          showScannerScreen();
+          e.preventDefault();
+        }
+      });
+    }
+    
+    // Set active navigation
+    function setActiveNav(active) {
+      [navHome, navHistory, navScanner, navProfile].forEach(nav => {
+        nav.classList.remove('active');
+      });
+      
+      switch(active) {
+        case 'home':
+          navHome.classList.add('active');
+          break;
+        case 'history':
+          navHistory.classList.add('active');
+          break;
+        case 'scanner':
+          navScanner.classList.add('active');
+          break;
+        case 'profile':
+          navProfile.classList.add('active');
+          break;
+      }
+    }
+    
+    // Show user profile
+    function showUserProfile() {
+      Swal.fire({
+        title: 'Profil Pengguna',
+        html: `
+          <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 4rem; color: #1976d2; margin-bottom: 15px;">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <h3 style="color: #333; margin-bottom: 10px;">${userData.nama}</h3>
+            <p style="color: #666; margin-bottom: 5px;"><strong>NIP:</strong> ${userData.nip}</p>
+            ${userData.jabatan ? `<p style="color: #666; margin-bottom: 5px;"><strong>Jabatan:</strong> ${userData.jabatan}</p>` : ''}
+            <p style="color: #666; margin-bottom: 5px;"><strong>Device ID:</strong> ${userData.deviceId.substring(0, 20)}...</p>
+            <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #4CAF50;">
+              <p style="color: #2e7d32; font-weight: bold; margin: 0;">
+                <i class="fas fa-check-circle"></i> Status: TERDAFTAR & AKTIF
+              </p>
+            </div>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Logout',
+        cancelButtonText: 'Tutup',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        reverseButtons: true,
+        width: window.innerWidth <= 768 ? '90%' : '500px'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          logoutUser();
+        }
+      });
+    }
+    
+    // Show history
+    function showHistory() {
+      if (!userData || !userData.nip) {
+        showToast('Silakan login terlebih dahulu', 'warning');
+        return;
+      }
+      
+      loadingScreen.classList.remove('d-none');
+      loadingText.textContent = 'Memuat riwayat absensi...';
+      
+      google.script.run.withSuccessHandler((response) => {
+        loadingScreen.classList.add('d-none');
+        
+        let history;
+        try {
+          history = JSON.parse(response);
+        } catch (e) {
+          console.error('Error parsing history:', e);
+          showToast('Gagal memuat riwayat', 'error');
+          return;
+        }
+        
+        if (history.length === 0) {
+          Swal.fire({
+            title: 'Riwayat Absensi',
+            html: '<p>Belum ada riwayat absensi</p>',
+            icon: 'info'
+          });
+          return;
+        }
+        
+        let historyHtml = `
+          <div style="max-height: 400px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background: #f8f9fa; position: sticky; top: 0;">
+                  <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Tanggal</th>
+                  <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Pagi</th>
+                  <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Sore</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+        
+        history.forEach(item => {
+          historyHtml += `
+            <tr style="border-bottom: 1px solid #dee2e6;">
+              <td style="padding: 10px;">${item.tanggal}</td>
+              <td style="padding: 10px; color: ${item.pagi ? '#4CAF50' : '#f44336'}">
+                ${item.pagi || '-'}
+              </td>
+              <td style="padding: 10px; color: ${item.sore ? '#4CAF50' : '#f44336'}">
+                ${item.sore || '-'}
+              </td>
+            </tr>
+          `;
+        });
+        
+        historyHtml += `
+              </tbody>
+            </table>
+          </div>
+        `;
+        
+        Swal.fire({
+          title: 'Riwayat Absensi',
+          html: historyHtml,
+          width: window.innerWidth <= 768 ? '95%' : '600px',
+          showCloseButton: true,
+          showConfirmButton: false
+        });
+        
+      }).withFailureHandler((error) => {
+        loadingScreen.classList.add('d-none');
+        showToast('Gagal memuat riwayat', 'error');
+      }).getRiwayatAbsensi(userData.nip, 10);
+    }
+    
+    // Show toast notification
+    function showToast(message, type = 'info') {
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+      `;
+      toast.classList.remove('d-none');
+      
+      setTimeout(() => {
+        toast.classList.add('d-none');
+      }, 3000);
+    }
+    
+    // ====== CORE FUNCTIONS ======
+    // Semua fungsi inti dari versi sebelumnya tetap sama
+    // Hanya disesuaikan dengan UI mobile-first
+    
+    // Check cookie consent
+    function checkCookieConsent() {
+      const consent = localStorage.getItem(STORAGE_KEYS.COOKIE_CONSENT);
+      
+      if (consent === null) {
+        setTimeout(() => {
+          cookieBanner.classList.remove('d-none');
+        }, 1000);
+      } else if (consent === 'accepted') {
+        initializeApp();
+      } else {
+        initializeApp();
+      }
+    }
+    
+    // Accept cookies
+    function acceptCookies() {
+      localStorage.setItem(STORAGE_KEYS.COOKIE_CONSENT, 'accepted');
+      cookieBanner.classList.add('d-none');
+      showToast('Cookies diterima', 'success');
+      initializeApp();
+    }
+    
+    // Decline cookies
+    function declineCookies() {
+      localStorage.setItem(STORAGE_KEYS.COOKIE_CONSENT, 'declined');
+      cookieBanner.classList.add('d-none');
+      showToast('Cookies ditolak - data tidak akan disimpan', 'warning');
+      initializeApp();
+    }
+    
+    // Initialize application
+    function initializeApp() {
+      loadingText.textContent = 'Memeriksa data login...';
+      loadingScreen.classList.remove('d-none');
+      
+      setTimeout(() => {
+        loadUserData();
+        
+        if (userData && userData.nip && userData.deviceId) {
+          validateStoredUserData();
+        } else {
+          loadingText.textContent = 'Menyiapkan scanner...';
+          setTimeout(initializeScanner, 500);
+        }
+      }, 1000);
+    }
+    
+    // Load user data from localStorage
+    function loadUserData() {
+      try {
+        const storedData = localStorage.getItem(STORAGE_KEYS.USER_DATA);
+        if (storedData) {
+          userData = JSON.parse(storedData);
+          
+          const lastLogin = localStorage.getItem(STORAGE_KEYS.LAST_LOGIN);
+          if (lastLogin) {
+            const lastLoginDate = new Date(lastLogin);
+            const now = new Date();
+            const daysDiff = (now - lastLoginDate) / (1000 * 60 * 60 * 24);
+            
+            if (daysDiff > 30) {
+              clearInvalidUserData();
+              return;
+            }
+          }
+          
+          console.log('User data loaded:', userData);
+        }
+      } catch (e) {
+        console.error("Error loading user data:", e);
+        clearInvalidUserData();
+      }
+    }
+    
+    // Save user data to localStorage
+    function saveUserData() {
+      if (!userData) return;
+      
+      try {
+        localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(userData));
+        localStorage.setItem(STORAGE_KEYS.LAST_LOGIN, new Date().toISOString());
+        console.log('User data saved');
+      } catch (e) {
+        console.error("Error saving user data:", e);
+      }
+    }
+    
+    // Clear invalid user data
+    function clearInvalidUserData() {
+      userData = null;
+      localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+      localStorage.removeItem(STORAGE_KEYS.LAST_LOGIN);
+      logoutBtn.classList.add('d-none');
+    }
+    
+    // Validate stored user data with server
+    function validateStoredUserData() {
+      if (isAutoLoginAttempted) return;
+      
+      isAutoLoginAttempted = true;
+      loadingText.textContent = 'Memvalidasi data login...';
+      
+      const deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+      
+      google.script.run.withSuccessHandler((response) => {
+        try {
+          const result = JSON.parse(response);
+          
+          if (result.status === "registered") {
+            autoLoginSuccess(result);
+          } else {
+            clearInvalidUserData();
+            initializeScanner();
+          }
+        } catch (e) {
+          console.error("Error parsing validation response:", e);
+          clearInvalidUserData();
+          initializeScanner();
+        }
+      }).withFailureHandler((error) => {
+        console.error("Validation failed:", error);
+        if (userData && userData.nip) {
+          updateUserInfo();
+          initializeScanner();
+        } else {
+          clearInvalidUserData();
+          initializeScanner();
+        }
+      }).checkRegistrationStatus(deviceId);
+    }
+    
+    // Auto-login success
+    function autoLoginSuccess(result) {
+      userData = {
+        nip: result.nip,
+        nama: result.nama,
+        deviceId: result.deviceId,
+        jabatan: result.jabatan || ""
+      };
+      
+      saveUserData();
+      updateUserInfo();
+      
+      showToast(`Selamat datang ${result.nama}!`, 'success');
+      initializeScanner();
+    }
+    
+    // Update user info display
+    function updateUserInfo() {
+      if (userData && userData.nip && userData.nama) {
+        userName.textContent = userData.nama;
+        userNip.textContent = userData.nip;
+        
+        if (userData.jabatan) {
+          userStatus.textContent = userData.jabatan;
+          userStatus.className = 'status-badge status-active';
+        } else {
+          userStatus.textContent = 'Terdaftar';
+          userStatus.className = 'status-badge status-active';
+        }
+        
+        userInfoCard.classList.remove('d-none');
+        logoutBtn.classList.remove('d-none');
+        
+        updateStatusAbsensi();
+      } else {
+        userName.textContent = "Nama Pegawai";
+        userNip.textContent = "-";
+        userStatus.textContent = "Belum Terdaftar";
+        userStatus.className = 'status-badge status-inactive';
+        userInfoCard.classList.add('d-none');
+        logoutBtn.classList.add('d-none');
+        
+        sisaKesempatanBadge.classList.add('d-none');
+        scannerMessage.classList.add('d-none');
+      }
+    }
+    
+    // Generate device ID
+    function generateDeviceId() {
+      let deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+      if (!deviceId) {
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 1000000);
+        const userAgentHash = navigator.userAgent.length % 10000;
+        deviceId = `DEV_${timestamp}_${random}_${userAgentHash}`;
+        localStorage.setItem(STORAGE_KEYS.DEVICE_ID, deviceId);
+      }
+      regDeviceId.value = deviceId;
+      return deviceId;
+    }
+    
+    // Logout user
+    function logoutUser() {
+      Swal.fire({
+        title: 'Konfirmasi Logout',
+        html: `Apakah Anda yakin ingin logout?<br><br>
+               <small>Data login akan dihapus dari perangkat ini.</small>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Logout',
+        confirmButtonColor: '#d33',
+        cancelButtonText: 'Batal',
+        cancelButtonColor: '#1976d2'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          clearInvalidUserData();
+          stopScanner();
+          updateUserInfo();
+          
+          showToast('Logout berhasil', 'success');
+          setTimeout(() => {
+            startScanner();
+          }, 500);
+        }
+      });
+    }
+    
+    // Update date and time
+    function updateDateTime() {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      const timeStr = now.toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      
+      datetimeElement.textContent = `${dateStr} | ${timeStr}`;
+      currentTime.textContent = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
+      currentDate.textContent = now.toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
+    }
+    
+    // Start datetime update interval
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+    
+    // Check location status
+    function checkLocationStatus() {
+      if (navigator.geolocation) {
+        locationStatus.textContent = "Aktif";
+        locationStatus.style.color = "#4CAF50";
+      } else {
+        locationStatus.textContent = "Nonaktif";
+        locationStatus.style.color = "#f44336";
+      }
+    }
+    
+    // Initialize scanner
+    function initializeScanner() {
+      loadingScreen.classList.add('d-none');
+      registerScreen.classList.add('d-none');
+      scannerScreen.classList.remove('d-none');
+      setActiveNav('scanner');
+      
+      generateDeviceId();
+      checkLocationStatus();
+      
+      setTimeout(() => {
+        if (!isScannerRunning) {
+          startScanner();
+        }
+      }, 500);
+    }
+    
+    // Show scanner screen
+    function showScannerScreen() {
+      loadingScreen.classList.add('d-none');
+      registerScreen.classList.add('d-none');
+      scannerScreen.classList.remove('d-none');
+      setActiveNav('scanner');
+      
+      setTimeout(() => {
+        if (!isScannerRunning) {
+          startScanner();
+        }
+      }, 500);
+    }
+    
+    // Show registration screen
+    function showRegistrationScreen() {
+      scannerScreen.classList.add('d-none');
+      registerScreen.classList.remove('d-none');
+      setActiveNav('profile');
+      stopScanner();
+      
+      setTimeout(() => {
+        regNip.focus();
+      }, 300);
+    }
+    
+    // Refresh scanner
+    function refreshScanner() {
+      stopScanner();
+      showToast('Merefresh scanner...', 'info');
+      
+      setTimeout(() => {
+        startScanner();
+        showToast('Scanner siap!', 'success');
+      }, 1000);
+    }
+    
+    // Start QR scanner
+    function startScanner() {
+      if (!html5QrCode) {
+        if (typeof Html5Qrcode === 'undefined') {
+          showToast('Library scanner tidak tersedia', 'error');
+          return;
+        }
+        
+        try {
+          html5QrCode = new Html5Qrcode("reader");
+        } catch (e) {
+          console.error("Failed to initialize scanner:", e);
+          showToast('Gagal memulai scanner', 'error');
+          return;
+        }
+      }
+      
+      // Mobile-optimized config
+      const config = {
+        fps: 10,
+        qrbox: { width: 200, height: 200 },
+        aspectRatio: 1.0,
+        disableFlip: false,
+        focusMode: "continuous"
+      };
+      
+      html5QrCode.start(
+        { facingMode: "environment" },
+        config,
+        onScanSuccess,
+        (errorMessage) => {
+          if (!errorMessage.includes("NotFoundException")) {
+            console.log("Scan error:", errorMessage);
+          }
+        }
+      ).then(() => {
+        isScannerRunning = true;
+        console.log("Mobile scanner started");
+      }).catch(err => {
+        console.error("Mobile scanner error:", err);
+        showToast('Gagal mengakses kamera', 'error');
+      });
+    }
+    
+    // Stop scanner
+    function stopScanner() {
+      if (html5QrCode && isScannerRunning) {
+        try {
+          html5QrCode.stop();
+          isScannerRunning = false;
+        } catch (e) {
+          console.error("Error stopping scanner:", e);
+        }
+      }
+    }
+    
+    // Handle successful scan
+    function onScanSuccess(decodedText) {
+      stopScanner();
+      
+      // Vibration feedback
+      if (navigator.vibrate) {
+        navigator.vibrate(200);
+      }
+      
+      // Determine apel type
+      let jenis = "";
+      if (decodedText.includes("APEL_PAGI") || decodedText.toLowerCase().includes("pagi")) {
+        jenis = "pagi";
+      } else if (decodedText.includes("APEL_SORE") || decodedText.toLowerCase().includes("sore")) {
+        jenis = "sore";
+      }
+      
+      if (!jenis) {
+        showToast('QR Code tidak valid', 'error');
+        setTimeout(startScanner, 1000);
+        return;
+      }
+      
+      currentApelType = jenis;
+      
+      showToast(`QR Code ${jenis.toUpperCase()} berhasil!`, 'success');
+      
+      setTimeout(() => {
+        processAttendance(jenis);
+      }, 1000);
+    }
+    
+    // Process attendance
+    function processAttendance(jenis) {
+      if (!userData || !userData.nip || !userData.deviceId) {
+        const deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+        
+        loadingText.textContent = 'Memeriksa status perangkat...';
+        loadingScreen.classList.remove('d-none');
+        
+        google.script.run.withSuccessHandler((response) => {
+          loadingScreen.classList.add('d-none');
+          
+          let result;
+          try {
+            result = JSON.parse(response);
+          } catch (e) {
+            console.error("Error parsing response:", e);
+            promptManualRegistration(jenis);
+            return;
+          }
+          
+          if (result.status === "registered") {
+            userData = {
+              nip: result.nip,
+              nama: result.nama,
+              deviceId: deviceId,
+              jabatan: result.jabatan || ""
+            };
+            
+            saveUserData();
+            updateUserInfo();
+            proceedWithAttendance(jenis);
+          } else {
+            promptManualRegistration(jenis);
+          }
+        }).withFailureHandler((error) => {
+          loadingScreen.classList.add('d-none');
+          promptManualRegistration(jenis);
+        }).checkRegistrationStatus(deviceId);
+        
+        return;
+      }
+      
+      proceedWithAttendance(jenis);
+    }
+    
+    // Prompt manual registration
+    function promptManualRegistration(jenis) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Perangkat Belum Terdaftar',
+        html: `<div style="text-align: center;">
+                 <p>Perangkat Anda belum terdaftar di sistem.</p>
+                 <div style="background: #fff3e0; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #FF9800;">
+                   <p style="font-size: 1.1rem;"><i class="fas fa-qrcode"></i> QR Code <strong>${jenis.toUpperCase()}</strong></p>
+                   <p>Silakan daftarkan perangkat Anda</p>
+                 </div>
+               </div>`,
+        confirmButtonText: 'Daftar Sekarang',
+        confirmButtonColor: '#1976d2',
+        showCancelButton: true,
+        cancelButtonText: 'Nanti',
+        width: window.innerWidth <= 768 ? '90%' : '500px'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          showRegistrationScreen();
+        } else {
+          startScanner();
+        }
+      });
+    }
+    
+    // Proceed with attendance
+    function proceedWithAttendance(jenis) {
+      loadingText.textContent = 'Mengambil lokasi...';
+      loadingScreen.classList.remove('d-none');
+      
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          submitAttendance(position.coords.latitude, position.coords.longitude, jenis);
+        },
+        (error) => {
+          loadingScreen.classList.add('d-none');
+          
+          let errorMessage = "Gagal mengakses lokasi";
+          switch(error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = "Izin lokasi ditolak";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = "Lokasi tidak tersedia";
+              break;
+            case error.TIMEOUT:
+              errorMessage = "Timeout mengambil lokasi";
+              break;
+          }
+          
+          Swal.fire({
+            icon: 'error',
+            title: errorMessage,
+            html: `Izinkan akses lokasi untuk melanjutkan absensi.`,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#1976d2'
+          }).then(() => {
+            startScanner();
+          });
+        },
+        { 
+          timeout: 15000, 
+          enableHighAccuracy: true,
+          maximumAge: 0
+        }
+      );
+    }
+    
+    // Submit attendance
+    function submitAttendance(lat, lon, jenis) {
+      loadingText.textContent = 'Mengirim absensi...';
+      
+      google.script.run.withSuccessHandler((response) => {
+        loadingScreen.classList.add('d-none');
+        
+        if (response.status === "success") {
+          // Haptic feedback
+          if (navigator.vibrate) {
+            navigator.vibrate([100, 50, 100]);
+          }
+          
+          Swal.fire({
+            icon: 'success',
+            title: 'Absensi Berhasil!',
+            html: `<div style="text-align: center;">
+                     <div style="font-size: 4rem; color: #4CAF50; margin-bottom: 15px;">
+                       <i class="fas fa-check-circle"></i>
+                     </div>
+                     <h3 style="color: #2e7d32;">${response.message}</h3>
+                     <div style="background: #f0f8ff; padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 0.9rem;">
+                       <p><strong>Jenis:</strong> ${jenis === 'pagi' ? 'Apel Pagi' : 'Apel Sore'}</p>
+                       <p><strong>Waktu:</strong> ${new Date().toLocaleTimeString('id-ID')}</p>
+                       <p><strong>Tanggal:</strong> ${new Date().toLocaleDateString('id-ID')}</p>
+                     </div>
+                   </div>`,
+            confirmButtonText: 'Selesai',
+            confirmButtonColor: '#4CAF50',
+            width: window.innerWidth <= 768 ? '90%' : '500px'
+          }).then(() => {
+            updateStatusAbsensi();
+            startScanner();
+          });
+        } else if (response.message.includes("DEVICE")) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Perangkat Tidak Valid',
+            html: `<p>${response.message}</p>`,
+            confirmButtonText: 'Daftar Ulang',
+            confirmButtonColor: '#1976d2'
+          }).then(() => {
+            clearInvalidUserData();
+            updateUserInfo();
+            showRegistrationScreen();
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Absensi Gagal',
+            html: `<p>${response.message}</p>`,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#1976d2'
+          }).then(() => {
+            startScanner();
+          });
+        }
+      }).withFailureHandler((error) => {
+        loadingScreen.classList.add('d-none');
+        showToast('Kesalahan server', 'error');
+        setTimeout(startScanner, 1000);
+      }).submitAbsen(
+        userData.nip,
+        userData.deviceId,
+        jenis,
+        lat,
+        lon
+      );
+    }
+    
+    // Update status absensi
+    function updateStatusAbsensi() {
+      if (!userData || !userData.nip) return;
+      
+      google.script.run.withSuccessHandler((status) => {
+        try {
+          const result = JSON.parse(status);
+          
+          if (result.sisaKesempatan !== undefined) {
+            sisaKesempatanCount.textContent = result.sisaKesempatan;
+            
+            if (result.sisaKesempatan > 0) {
+              sisaKesempatanBadge.className = 'chance-badge';
+              sisaKesempatanBadge.classList.remove('d-none');
+            } else if (result.sisaKesempatan === 0) {
+              sisaKesempatanBadge.className = 'chance-badge danger';
+              sisaKesempatanBadge.classList.remove('d-none');
+            }
+          }
+          
+          if (result.totalAbsen >= 2) {
+            scannerMessage.innerHTML = `
+              <div class="message-content">
+                <div class="message-icon">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="message-text">
+                  <h4>Absensi Lengkap</h4>
+                  <p>Pagi: ${result.waktuPagi || '-'} | Sore: ${result.waktuSore || '-'}</p>
+                </div>
+              </div>
+            `;
+            scannerMessage.classList.remove('d-none');
+          } else {
+            scannerMessage.classList.add('d-none');
+          }
+        } catch (e) {
+          console.error("Error parsing status:", e);
+        }
+      }).cekStatusAbsensiHariIni(userData.nip);
+    }
+    
+    // Submit registration
+    function submitRegistration() {
+      const nip = regNip.value.trim();
+      
+      if (!nip) {
+        showToast('Masukkan NIP terlebih dahulu', 'warning');
+        regNip.focus();
+        return;
+      }
+      
+      if (!/^\d+$/.test(nip)) {
+        showToast('NIP hanya boleh angka', 'warning');
+        regNip.focus();
+        regNip.select();
+        return;
+      }
+      
+      if (nip.length < 8 || nip.length > 20) {
+        showToast('NIP harus 8-20 digit', 'warning');
+        regNip.focus();
+        regNip.select();
+        return;
+      }
+      
+      const deviceId = regDeviceId.value;
+      
+      loadingText.textContent = 'Memeriksa data pegawai...';
+      loadingScreen.classList.remove('d-none');
+      
+      google.script.run.withSuccessHandler((response) => {
+        loadingScreen.classList.add('d-none');
+        
+        let result;
+        try {
+          result = JSON.parse(response);
+        } catch (e) {
+          console.error("Error parsing response:", e);
+          showToast('Kesalahan sistem', 'error');
+          return;
+        }
+        
+        switch(result.status) {
+          case "duplicate":
+            handleDuplicateRegistration(result);
+            break;
+            
+          case "available":
+            handleAvailableRegistration(nip, deviceId, result);
+            break;
+            
+          case "device_duplicate":
+            Swal.fire({
+              icon: 'error',
+              title: 'Perangkat Sudah Terdaftar',
+              html: `<div style="text-align: center;">
+                      <p>Perangkat ini sudah terdaftar atas nama:</p>
+                      <div style="background: #ffebee; padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <p style="font-weight: bold;">${result.existingNama}</p>
+                        <p>NIP: ${result.existingNip}</p>
+                      </div>
+                     </div>`,
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#1976d2'
+            });
+            break;
+            
+          case "nip_duplicate":
+            Swal.fire({
+              icon: 'warning',
+              title: 'NIP Sudah Terdaftar',
+              html: `<div style="text-align: center;">
+                      <p>NIP sudah terdaftar dengan perangkat lain</p>
+                      <div style="background: #fff3e0; padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        <p>Atas nama: <strong>${result.existingNama}</strong></p>
+                      </div>
+                     </div>`,
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#1976d2'
+            });
+            break;
+            
+          case "error":
+            showToast(result.message, 'error');
+            break;
+        }
+      }).withFailureHandler((error) => {
+        loadingScreen.classList.add('d-none');
+        showToast('Koneksi gagal', 'error');
+      }).checkDuplicateRegistration(nip, deviceId);
+    }
+    
+    // Handle duplicate registration
+    function handleDuplicateRegistration(result) {
+      userData = {
+        nip: result.nip,
+        nama: result.nama,
+        deviceId: result.deviceId,
+        jabatan: result.jabatan || ""
+      };
+      
+      saveUserData();
+      updateUserInfo();
+      
+      showToast(`Selamat datang ${result.nama}!`, 'success');
+      setTimeout(() => {
+        showScannerScreen();
+      }, 1500);
+    }
+    
+    // Handle available registration
+    function handleAvailableRegistration(nip, deviceId, result) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Konfirmasi Data',
+        html: `<div style="text-align: center;">
+                 <p>Data ditemukan:</p>
+                 <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; margin: 15px 0;">
+                   <p><strong>Nama:</strong> ${result.nama}</p>
+                   <p><strong>NIP:</strong> ${nip}</p>
+                   ${result.jabatan ? `<p><strong>Jabatan:</strong> ${result.jabatan}</p>` : ''}
+                 </div>
+                 <p>Apakah data sudah benar?</p>
+               </div>`,
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Benar',
+        confirmButtonColor: '#4CAF50',
+        cancelButtonText: 'Periksa Ulang',
+        cancelButtonColor: '#757575',
+        width: window.innerWidth <= 768 ? '90%' : '500px'
+      }).then((confirmation) => {
+        if (confirmation.isConfirmed) {
+          proceedWithRegistration(nip, deviceId, result);
+        } else {
+          regNip.focus();
+          regNip.select();
+        }
+      });
+    }
+    
+    // Proceed with registration
+    function proceedWithRegistration(nip, deviceId, preCheckResult) {
+      loadingText.textContent = 'Mendaftarkan akun...';
+      loadingScreen.classList.remove('d-none');
+      
+      google.script.run.withSuccessHandler((response) => {
+        loadingScreen.classList.add('d-none');
+        
+        let result;
+        try {
+          result = JSON.parse(response);
+        } catch (e) {
+          console.error("Error parsing response:", e);
+          showToast('Kesalahan sistem', 'error');
+          return;
+        }
+        
+        if (result.status === "ok") {
+          userData = {
+            nip: result.nip,
+            nama: result.nama,
+            deviceId: deviceId,
+            jabatan: result.jabatan || ""
+          };
+          
+          saveUserData();
+          updateUserInfo();
+          
+          Swal.fire({
+            icon: 'success',
+            title: 'Pendaftaran Berhasil!',
+            html: `<div style="text-align: center;">
+                     <div style="font-size: 4rem; color: #4CAF50; margin-bottom: 15px;">
+                       <i class="fas fa-user-check"></i>
+                     </div>
+                     <h3 style="color: #2e7d32;">Selamat Bergabung!</h3>
+                     <div style="background: #f0f8ff; padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 0.9rem;">
+                       <p><strong>Nama:</strong> ${result.nama}</p>
+                       <p><strong>NIP:</strong> ${result.nip}</p>
+                       ${result.jabatan ? `<p><strong>Jabatan:</strong> ${result.jabatan}</p>` : ''}
+                       <p><strong>Status:</strong> <span style="color: #4CAF50; font-weight: bold;">AKTIF</span></p>
+                     </div>
+                   </div>`,
+            confirmButtonText: 'Mulai Absensi',
+            confirmButtonColor: '#4CAF50',
+            width: window.innerWidth <= 768 ? '90%' : '500px'
+          }).then(() => {
+            showScannerScreen();
+            
+            if (currentApelType) {
+              setTimeout(() => {
+                proceedWithAttendance(currentApelType);
+              }, 1500);
+            }
+          });
+        } else {
+          showToast(result.message, 'error');
+        }
+      }).withFailureHandler((error) => {
+        loadingScreen.classList.add('d-none');
+        showToast('Kesalahan server', 'error');
+      }).signupUser(nip, deviceId);
+    }
+    
+    // Initialize app
+    setTimeout(() => {
+      checkCookieConsent();
+    }, 500);
+    
+    // PWA Installation Prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      setTimeout(() => {
+        if (deferredPrompt && !localStorage.getItem(STORAGE_KEYS.PWA_INSTALLED)) {
+          Swal.fire({
+            title: 'Pasang Aplikasi',
+            html: `<div style="text-align: center;">
+                     <div style="font-size: 3rem; color: #1976d2; margin-bottom: 15px;">
+                       <i class="fas fa-mobile-alt"></i>
+                     </div>
+                     <p>Pasang aplikasi ke home screen untuk akses lebih mudah?</p>
+                     <small>Aplikasi dapat digunakan seperti aplikasi native</small>
+                   </div>`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Pasang',
+            confirmButtonColor: '#1976d2',
+            cancelButtonText: 'Nanti',
+            width: window.innerWidth <= 768 ? '90%' : '400px'
+          }).then((result) => {
+            if (result.isConfirmed && deferredPrompt) {
+              deferredPrompt.prompt();
+              deferredPrompt.userChoice.then((choiceResult) => {
+                localStorage.setItem(STORAGE_KEYS.PWA_INSTALLED, 'true');
+                if (choiceResult.outcome === 'accepted') {
+                  showToast('Aplikasi berhasil dipasang', 'success');
+                }
+                deferredPrompt = null;
+              });
+            }
+          });
+        }
+      }, 3000);
+    });
+  </script>
+  <!-- Tambahkan ini SEBELUM </body> -->
+<script>
+  // ====== GAS DEPLOYMENT CONFIG ======
+  // Ganti dengan URL Web Apps Anda setelah deploy
+  const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+  
+  // ====== AJAX HANDLER UNTUK GAS ======
+  function callGoogleScript(functionName, params = {}) {
+    return new Promise((resolve, reject) => {
+      // Tambahkan timestamp untuk menghindari cache
+      params._t = new Date().getTime();
+      
+      // Buat form data
+      const formData = new FormData();
+      Object.keys(params).forEach(key => {
+        formData.append(key, params[key]);
+      });
+      
+      // Kirim request ke GAS
+      fetch(`${GAS_WEB_APP_URL}?fn=${functionName}`, {
+        method: 'POST',
+        mode: 'no-cors', // Penting untuk Google Apps Script
+        body: formData
+      })
+      .then(response => {
+        // Karena 'no-cors', kita tidak bisa membaca response langsung
+        // Kita perlu menggunakan Google Apps Script dengan metode GET
+        callGoogleScriptGet(functionName, params)
+          .then(resolve)
+          .catch(reject);
+      })
+      .catch(reject);
+    });
+  }
+  
+  // Alternatif menggunakan GET (lebih reliable untuk GAS)
+  function callGoogleScriptGet(functionName, params = {}) {
+    return new Promise((resolve, reject) => {
+      // Build URL dengan parameters
+      const urlParams = new URLSearchParams();
+      urlParams.append('fn', functionName);
+      Object.keys(params).forEach(key => {
+        urlParams.append(key, params[key]);
+      });
+      
+      fetch(`${GAS_WEB_APP_URL}?${urlParams.toString()}`, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'omit'
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(text => {
+        try {
+          const data = JSON.parse(text);
+          resolve(data);
+        } catch (e) {
+          // Jika response bukan JSON, return sebagai text
+          resolve(text);
+        }
+      })
+      .catch(reject);
+    });
+  }
+  
+  // ====== REPLACE google.script.run CALLS ======
+  // Simpan fungsi asli untuk fallback
+  const originalGoogleScriptRun = window.google?.script?.run;
+  
+  // Override jika tidak ada google.script.run (saat di hosting eksternal)
+  if (!window.google || !window.google.script) {
+    window.google = window.google || {};
+    window.google.script = window.google.script || {};
+    window.google.script.run = {
+      withSuccessHandler: function(callback) {
+        this.successCallback = callback;
+        return this;
+      },
+      withFailureHandler: function(callback) {
+        this.failureCallback = callback;
+        return this;
+      },
+      // Tambahkan semua fungsi yang dipanggil dari GAS
+      submitAbsen: function(nip, deviceId, jenis, lat, lon) {
+        return callGoogleScriptGet('submitAbsen', {
+          nip: nip,
+          deviceId: deviceId,
+          jenisApel: jenis,
+          latUser: lat,
+          lonUser: lon
+        })
+        .then(this.successCallback)
+        .catch(this.failureCallback);
+      },
+      
+      checkDuplicateRegistration: function(nip, deviceId) {
+        return callGoogleScriptGet('checkDuplicateRegistration', {
+          nip: nip,
+          deviceId: deviceId
+        })
+        .then(this.successCallback)
+        .catch(this.failureCallback);
+      },
+      
+      signupUser: function(nip, deviceId) {
+        return callGoogleScriptGet('signupUser', {
+          nip: nip,
+          deviceId: deviceId
+        })
+        .then(this.successCallback)
+        .catch(this.failureCallback);
+      },
+      
+      checkRegistrationStatus: function(deviceId) {
+        return callGoogleScriptGet('checkRegistrationStatus', {
+          deviceId: deviceId
+        })
+        .then(this.successCallback)
+        .catch(this.failureCallback);
+      },
+      
+      cekStatusAbsensiHariIni: function(nip) {
+        return callGoogleScriptGet('cekStatusAbsensiHariIni', {
+          nip: nip
+        })
+        .then(this.successCallback)
+        .catch(this.failureCallback);
+      },
+      
+      getRiwayatAbsensi: function(nip, limit) {
+        return callGoogleScriptGet('getRiwayatAbsensi', {
+          nip: nip,
+          limit: limit || 10
+        })
+        .then(this.successCallback)
+        .catch(this.failureCallback);
+      },
+      
+      // Tambahkan fungsi lain yang digunakan
+      getUserDataByDeviceId: function(deviceId) {
+        return callGoogleScriptGet('getUserDataByDeviceId', {
+          deviceId: deviceId
+        })
+        .then(this.successCallback)
+        .catch(this.failureCallback);
+      }
+    };
+  }
+</script>
+</body>
+</html>
