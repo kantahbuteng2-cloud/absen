@@ -1,0 +1,21 @@
+{
+  "name": "Absensi Apel",
+  "short_name": "AbsensiApel",
+  "description": "Sistem Absensi Apel Digital Lapas Baubau",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1976d2",
+  "theme_color": "#1976d2",
+  "icons": [
+    {
+      "src": "https://cdn.jsdelivr.net/npm/@mdi/svg@6.5.95/svg/calendar-check.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "https://cdn.jsdelivr.net/npm/@mdi/svg@6.5.95/svg/calendar-check.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
