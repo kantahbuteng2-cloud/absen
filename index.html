@@ -1,52 +1,59 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <!-- Meta Tags -->
   <base target="_top">
   <script src="https://unpkg.com/html5-qrcode"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#1976d2">
   
-  <!-- Meta tag untuk mobile -->
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#1976d2">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Absensi Apel">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="msapplication-TileColor" content="#1976d2">
+  <meta name="application-name" content="Absensi Apel Lapas Baubau">
   
-  <!-- SweetAlert2 -->
+  <!-- Icons -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
+  
+  <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Font Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* Reset dan variabel */
+    /* ===== VARIABLES ===== */
     :root {
       --primary: #1976d2;
       --primary-dark: #0d47a1;
       --primary-light: #bbdefb;
       --success: #4caf50;
+      --success-dark: #2e7d32;
       --warning: #ff9800;
+      --warning-dark: #ef6c00;
       --danger: #f44336;
+      --danger-dark: #c62828;
       --light: #f8f9fa;
       --dark: #212529;
       --gray: #6c757d;
       --gray-light: #e9ecef;
+      --gray-dark: #495057;
       --border-radius: 16px;
       --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
       --transition: all 0.3s ease;
     }
     
+    /* ===== RESET & BASE ===== */
     html {
       font-size: 16px;
       -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
     }
     
     * {
@@ -67,7 +74,7 @@
       padding-bottom: env(safe-area-inset-bottom);
     }
     
-    /* Container utama */
+    /* ===== LAYOUT ===== */
     .container {
       max-width: 100%;
       margin: 0 auto;
@@ -77,7 +84,7 @@
       padding: 12px;
     }
     
-    /* Header - DIPERBESAR untuk HP */
+    /* ===== HEADER ===== */
     .header {
       text-align: center;
       margin-bottom: 15px;
@@ -112,12 +119,14 @@
       font-size: 1.9rem;
       margin-bottom: 10px;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      line-height: 1.3;
     }
     
     .header p {
       font-size: 1.15rem;
       opacity: 0.95;
       font-weight: 400;
+      margin-bottom: 8px;
     }
     
     #datetime {
@@ -130,7 +139,7 @@
       font-weight: 500;
     }
     
-    /* Logout Button */
+    /* ===== BUTTONS ===== */
     .logout-btn {
       position: absolute;
       top: 20px;
@@ -155,14 +164,83 @@
       border-color: rgba(255, 255, 255, 0.5);
     }
     
-    /* Main Content */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 22px 20px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      min-height: 65px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary), var(--primary-dark));
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(to right, var(--primary-dark), var(--primary));
+      box-shadow: 0 8px 25px rgba(25, 118, 210, 0.4);
+    }
+    
+    .btn-warning {
+      background: linear-gradient(to right, var(--warning), var(--warning-dark));
+      color: white;
+    }
+    
+    .btn-warning:hover {
+      background: linear-gradient(to right, var(--warning-dark), var(--warning));
+      box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
+    }
+    
+    .btn-success {
+      background: linear-gradient(to right, var(--success), var(--success-dark));
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background: linear-gradient(to right, var(--success-dark), var(--success));
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(to right, var(--danger), var(--danger-dark));
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background: linear-gradient(to right, var(--danger-dark), var(--danger));
+      box-shadow: 0 8px 25px rgba(244, 67, 54, 0.4);
+    }
+    
+    .btn i {
+      font-size: 1.5rem;
+    }
+    
+    /* ===== MAIN CONTENT ===== */
     .main-content {
       flex: 1;
       display: flex;
       flex-direction: column;
     }
     
-    /* User Info - DIPERBESAR */
+    /* ===== USER INFO ===== */
     .user-info {
       background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
       border-radius: var(--border-radius);
@@ -195,6 +273,7 @@
       margin-bottom: 8px;
       color: var(--primary-dark);
       font-weight: 700;
+      line-height: 1.2;
     }
     
     .user-details p {
@@ -204,7 +283,7 @@
       font-weight: 500;
     }
     
-    /* Status Bar - DIPERBESAR dan JELAS */
+    /* ===== STATUS BAR ===== */
     .status-bar {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -250,7 +329,7 @@
       color: var(--dark);
     }
     
-    /* Scanner Container - AREA BESAR untuk HP */
+    /* ===== SCANNER CONTAINER ===== */
     .scanner-container {
       flex: 1;
       display: flex;
@@ -296,7 +375,7 @@
       position: relative;
     }
     
-    /* QR Scanner Area - FULLSCREEN untuk HP */
+    /* ===== QR SCANNER AREA ===== */
     .scanner-area {
       flex: 1;
       display: flex;
@@ -331,15 +410,7 @@
       justify-content: center;
     }
     
-    #reader__scan_region video,
-    #reader__scan_region canvas,
-    #reader__scan_region img {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover;
-    }
-    
-    /* Scanner Instructions - DIPERBESAR */
+    /* ===== SCANNER INSTRUCTIONS ===== */
     .scanner-instructions {
       text-align: center;
       padding: 25px 20px;
@@ -401,7 +472,7 @@
       font-weight: 500;
     }
     
-    /* Action Buttons - BESAR untuk SENTUHAN */
+    /* ===== ACTION BUTTONS ===== */
     .action-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -410,66 +481,7 @@
       flex-shrink: 0;
     }
     
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      padding: 22px 20px;
-      font-size: 1.2rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: var(--transition);
-      text-decoration: none;
-      width: 100%;
-      font-family: 'Poppins', sans-serif;
-      min-height: 65px;
-      letter-spacing: 0.5px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .btn:active {
-      transform: scale(0.97);
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    .btn-primary {
-      background: linear-gradient(to right, var(--primary), var(--primary-dark));
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background: linear-gradient(to right, var(--primary-dark), var(--primary));
-      box-shadow: 0 8px 25px rgba(25, 118, 210, 0.4);
-    }
-    
-    .btn-warning {
-      background: linear-gradient(to right, var(--warning), #ef6c00);
-      color: white;
-    }
-    
-    .btn-warning:hover {
-      background: linear-gradient(to right, #ef6c00, var(--warning));
-      box-shadow: 0 8px 25px rgba(255, 152, 0, 0.4);
-    }
-    
-    .btn-success {
-      background: linear-gradient(to right, var(--success), #2e7d32);
-      color: white;
-    }
-    
-    .btn-success:hover {
-      background: linear-gradient(to right, #2e7d32, var(--success));
-      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
-    }
-    
-    .btn i {
-      font-size: 1.5rem;
-    }
-    
-    /* Loading Screen - DIPERBESAR */
+    /* ===== LOADING SCREEN ===== */
     .loading {
       display: flex;
       flex-direction: column;
@@ -509,7 +521,7 @@
       color: var(--gray);
     }
     
-    /* Registration Screen - DIPERBESAR */
+    /* ===== REGISTRATION SCREEN ===== */
     .registration-screen {
       flex: 1;
       display: flex;
@@ -571,7 +583,7 @@
       padding-left: 5px;
     }
     
-    /* Footer - DIPERBESAR */
+    /* ===== FOOTER ===== */
     .footer {
       text-align: center;
       padding: 25px 20px;
@@ -590,7 +602,7 @@
       font-weight: 500;
     }
     
-    /* Badge untuk sisa kesempatan */
+    /* ===== BADGES & MESSAGES ===== */
     .sisa-kesempatan-badge {
       position: absolute;
       top: 15px;
@@ -606,7 +618,6 @@
       border: 2px solid white;
     }
     
-    /* Scanner message */
     .scanner-message {
       position: absolute;
       top: 20px;
@@ -620,7 +631,7 @@
       border-left: 5px solid var(--success);
     }
     
-    /* Cookie banner */
+    /* ===== COOKIE BANNER ===== */
     .cookie-banner {
       position: fixed;
       bottom: 0;
@@ -673,85 +684,32 @@
       border: 2px solid white;
     }
     
-    /* Responsive Design untuk berbagai ukuran HP */
+    /* ===== RESPONSIVE DESIGN ===== */
     @media (max-width: 768px) {
-      html {
-        font-size: 17px;
-      }
-      
-      .container {
-        padding: 10px;
-      }
-      
-      .header {
-        padding: 18px 15px;
-      }
-      
-      .header h1 {
-        font-size: 1.7rem;
-      }
-      
-      .header-logo i {
-        font-size: 2.8rem;
-        padding: 20px;
-      }
-      
-      .action-buttons {
-        grid-template-columns: 1fr;
-        gap: 15px;
-      }
-      
-      .btn {
-        padding: 20px 18px;
-        font-size: 1.15rem;
-      }
-      
-      .logout-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 1.2rem;
-      }
+      html { font-size: 17px; }
+      .container { padding: 10px; }
+      .header { padding: 18px 15px; }
+      .header h1 { font-size: 1.7rem; }
+      .header-logo i { font-size: 2.8rem; padding: 20px; }
+      .action-buttons { grid-template-columns: 1fr; gap: 15px; }
+      .btn { padding: 20px 18px; font-size: 1.15rem; }
+      .logout-btn { width: 45px; height: 45px; font-size: 1.2rem; }
     }
     
     @media (max-width: 480px) {
-      html {
-        font-size: 18px;
-      }
-      
-      .container {
-        padding: 8px;
-      }
-      
-      .header h1 {
-        font-size: 1.6rem;
-      }
-      
-      .header p {
-        font-size: 1.1rem;
-      }
-      
+      html { font-size: 18px; }
+      .container { padding: 8px; }
+      .header h1 { font-size: 1.6rem; }
+      .header p { font-size: 1.1rem; }
       .user-info {
         flex-direction: column;
         text-align: center;
         gap: 15px;
         padding: 20px 15px;
       }
-      
-      .user-avatar {
-        width: 70px;
-        height: 70px;
-        font-size: 2rem;
-      }
-      
-      .user-details h3 {
-        font-size: 1.4rem;
-      }
-      
-      .status-bar {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      
+      .user-avatar { width: 70px; height: 70px; font-size: 2rem; }
+      .user-details h3 { font-size: 1.4rem; }
+      .status-bar { grid-template-columns: 1fr; gap: 20px; }
       .status-item {
         flex-direction: row;
         text-align: left;
@@ -760,7 +718,6 @@
         background: #f8f9fa;
         border-radius: 12px;
       }
-      
       .status-icon {
         margin-bottom: 0;
         width: 50px;
@@ -768,132 +725,59 @@
         font-size: 2rem;
         flex-shrink: 0;
       }
-      
-      .status-content {
-        flex: 1;
-      }
-      
-      .scanner-area {
-        min-height: 400px;
-      }
-      
-      .scanner-instructions {
-        padding: 20px 15px;
-      }
-      
-      .scanner-instructions p {
-        font-size: 1.1rem;
-      }
-      
-      .instruction-icons {
-        flex-direction: column;
-        gap: 20px;
-      }
-      
+      .status-content { flex: 1; }
+      .scanner-area { min-height: 400px; }
+      .scanner-instructions { padding: 20px 15px; }
+      .scanner-instructions p { font-size: 1.1rem; }
+      .instruction-icons { flex-direction: column; gap: 20px; }
       .instruction-icon {
         flex-direction: row;
         justify-content: flex-start;
         gap: 15px;
       }
-      
       .instruction-icon i {
-        width: 60px;
-        height: 60px;
-        font-size: 1.8rem;
-        flex-shrink: 0;
+        width: 60px; height: 60px; font-size: 1.8rem; flex-shrink: 0;
       }
-      
-      .instruction-icon span {
-        font-size: 1rem;
-      }
+      .instruction-icon span { font-size: 1rem; }
     }
     
     @media (max-width: 360px) {
-      .header h1 {
-        font-size: 1.4rem;
-      }
-      
-      .header p {
-        font-size: 1rem;
-      }
-      
-      .btn {
-        font-size: 1.1rem;
-        padding: 18px 15px;
-        min-height: 60px;
-      }
-      
-      .btn i {
-        font-size: 1.4rem;
-      }
-      
-      .card-header {
-        font-size: 1.2rem;
-        padding: 20px 15px;
-      }
+      .header h1 { font-size: 1.4rem; }
+      .header p { font-size: 1rem; }
+      .btn { font-size: 1.1rem; padding: 18px 15px; min-height: 60px; }
+      .btn i { font-size: 1.4rem; }
+      .card-header { font-size: 1.2rem; padding: 20px 15px; }
     }
     
-    /* Landscape Mode untuk HP */
     @media (orientation: landscape) and (max-height: 600px) {
-      .scanner-container {
-        min-height: 70vh;
-      }
-      
-      .header {
-        padding: 15px 12px;
-        margin-bottom: 10px;
-      }
-      
-      .header h1 {
-        font-size: 1.4rem;
-      }
-      
-      .header p {
-        font-size: 1rem;
-      }
-      
-      .header-logo i {
-        font-size: 2rem;
-        padding: 15px;
-      }
-      
-      .user-info {
-        margin-bottom: 10px;
-        padding: 15px;
-      }
-      
-      .status-bar {
-        padding: 15px;
-        margin-bottom: 10px;
-      }
-      
-      .btn {
-        padding: 18px 15px;
-        min-height: 55px;
-        font-size: 1.1rem;
-      }
-      
-      .scanner-instructions {
-        padding: 15px;
-      }
-      
-      .scanner-instructions p {
-        font-size: 1rem;
-      }
-      
-      .instruction-icon i {
-        font-size: 1.5rem;
-        width: 50px;
-        height: 50px;
-      }
+      .scanner-container { min-height: 70vh; }
+      .header { padding: 15px 12px; margin-bottom: 10px; }
+      .header h1 { font-size: 1.4rem; }
+      .header p { font-size: 1rem; }
+      .header-logo i { font-size: 2rem; padding: 15px; }
+      .user-info { margin-bottom: 10px; padding: 15px; }
+      .status-bar { padding: 15px; margin-bottom: 10px; }
+      .btn { padding: 18px 15px; min-height: 55px; font-size: 1.1rem; }
+      .scanner-instructions { padding: 15px; }
+      .scanner-instructions p { font-size: 1rem; }
+      .instruction-icon i { font-size: 1.5rem; width: 50px; height: 50px; }
     }
     
-    /* Dark mode support */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .scanner-area { min-height: 55vh; }
+      .header { padding: 10px; margin-bottom: 8px; }
+      .header h1 { font-size: 1.2rem; }
+      .action-buttons { margin-top: 10px; }
+      .btn { padding: 15px; min-height: 55px; font-size: 1rem; }
+    }
+    
+    /* ===== DARK MODE ===== */
     @media (prefers-color-scheme: dark) {
       :root {
         --light: #2d3748;
         --dark: #f7fafc;
         --gray-light: #4a5568;
+        --gray-dark: #cbd5e0;
       }
       
       body {
@@ -903,6 +787,7 @@
       
       .scanner-card, .status-bar, .user-info {
         background: #2d3748;
+        color: var(--dark);
       }
       
       input {
@@ -915,9 +800,14 @@
         background: #2d3748;
         color: #cbd5e0;
       }
+      
+      .scanner-message {
+        background: #4a5568;
+        color: white;
+      }
     }
     
-    /* Utility Classes */
+    /* ===== UTILITY CLASSES ===== */
     .text-center { text-align: center; }
     .text-muted { color: var(--gray); }
     .mt-1 { margin-top: 15px; }
@@ -927,12 +817,17 @@
     .d-none { display: none !important; }
     .d-flex { display: flex; }
     .d-block { display: block; }
+    .d-grid { display: grid; }
     .highlight { color: var(--primary-dark); font-weight: 700; }
+    .fw-bold { font-weight: 700; }
+    .text-success { color: var(--success); }
+    .text-warning { color: var(--warning); }
+    .text-danger { color: var(--danger); }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Header dengan Logout Button -->
+    <!-- Header -->
     <header class="header">
       <button id="logoutBtn" class="logout-btn d-none" title="Logout">
         <i class="fas fa-sign-out-alt"></i>
@@ -1083,9 +978,9 @@
               </label>
               <div class="input-with-icon">
                 <i class="input-icon fas fa-id-card"></i>
-                <input type="text" id="regNip" placeholder="Contoh: 197001012000011001" maxlength="20">
+                <input type="text" id="regNip" placeholder="Contoh: 197001012000011001" maxlength="20" inputmode="numeric">
               </div>
-              <small>Masukkan NIP sesuai yang terdaftar di Lapas Baubau</small>
+              <small>Masukkan NIP sesuai yang terdaftar di Lapas Baubau (hanya angka)</small>
             </div>
             
             <div class="form-group">
@@ -1142,14 +1037,34 @@
   </div>
 
   <script>
-    // Global variables
+    // ============================================
+    // GLOBAL CONFIGURATION
+    // ============================================
+    const CONFIG = {
+      GAS_WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbw9z7MUv6VXZnaWFO-ek82gJKmIcL8VGajH-Kx10wRkBFmk76VbsD5WxqFdUxop20x6/exec',
+      APP_NAME: 'Absensi Apel Lapas Baubau',
+      VERSION: '1.0.0',
+      MAX_NIP_LENGTH: 20,
+      MIN_NIP_LENGTH: 8,
+      MAX_ATTEMPTS: 2,
+      LOCATION_TIMEOUT: 15000,
+      SCANNER_FPS: 20
+    };
+    
+    // ============================================
+    // GLOBAL VARIABLES
+    // ============================================
     let userData = null;
     let html5QrCode = null;
     let currentApelType = null;
     let isScannerRunning = false;
     let isAutoLoginAttempted = false;
+    let deviceId = null;
+    let deferredPrompt = null;
     
-    // DOM Elements
+    // ============================================
+    // DOM ELEMENTS
+    // ============================================
     const loadingScreen = document.getElementById('loadingScreen');
     const scannerScreen = document.getElementById('scannerScreen');
     const registerScreen = document.getElementById('registerScreen');
@@ -1176,35 +1091,95 @@
     const cookieAccept = document.getElementById('cookieAccept');
     const cookieDecline = document.getElementById('cookieDecline');
     
-    // Storage Keys
+    // ============================================
+    // STORAGE KEYS
+    // ============================================
     const STORAGE_KEYS = {
       USER_DATA: 'absensi_apel_user_data',
       DEVICE_ID: 'absensi_apel_device_id',
       COOKIE_CONSENT: 'absensi_apel_cookie_consent',
-      LAST_LOGIN: 'absensi_apel_last_login'
+      LAST_LOGIN: 'absensi_apel_last_login',
+      APP_SETTINGS: 'absensi_apel_settings',
+      PWA_PROMPT_SHOWN: 'absensi_apel_pwa_prompt'
     };
     
-    // Initialize on page load
+    // ============================================
+    // INITIALIZATION
+    // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('Initializing Absensi Apel System...');
+      console.log(`${CONFIG.APP_NAME} v${CONFIG.VERSION} - Initializing...`);
+      
+      // Check for required browser features
+      if (!checkBrowserSupport()) {
+        return;
+      }
+      
+      // Initialize UI
+      adjustForMobile();
+      generateDeviceId();
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+      checkLocationStatus();
       
       // Check cookie consent first
       checkCookieConsent();
       
-      // Adjust UI for mobile
-      adjustForMobile();
-      
-      // Generate device ID for registration
-      generateDeviceId();
-      
-      // Initialize date/time display
-      updateDateTime();
-      setInterval(updateDateTime, 1000);
-      
-      // Check location status
-      checkLocationStatus();
-      
       // Event listeners
+      setupEventListeners();
+      
+      // Handle online/offline status
+      setupNetworkListeners();
+      
+      // Handle PWA installation
+      setupPWAListeners();
+      
+      // Handle visibility changes
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    });
+    
+    // ============================================
+    // BROWSER SUPPORT CHECK
+    // ============================================
+    function checkBrowserSupport() {
+      const requiredFeatures = [
+        'localStorage',
+        'navigator.mediaDevices',
+        'navigator.geolocation',
+        'Promise',
+        'fetch'
+      ];
+      
+      const missingFeatures = requiredFeatures.filter(feature => {
+        if (feature === 'localStorage') return !window.localStorage;
+        if (feature === 'navigator.mediaDevices') return !navigator.mediaDevices;
+        if (feature === 'navigator.geolocation') return !navigator.geolocation;
+        if (feature === 'Promise') return !window.Promise;
+        if (feature === 'fetch') return !window.fetch;
+        return false;
+      });
+      
+      if (missingFeatures.length > 0) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Browser Tidak Didukung',
+          html: `Browser Anda tidak mendukung fitur berikut:<br>
+                 <strong>${missingFeatures.join(', ')}</strong><br><br>
+                 Gunakan browser modern seperti Chrome, Firefox, atau Safari versi terbaru.`,
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#1976d2',
+          allowOutsideClick: false
+        });
+        return false;
+      }
+      
+      return true;
+    }
+    
+    // ============================================
+    // SETUP EVENT LISTENERS
+    // ============================================
+    function setupEventListeners() {
+      // Button events
       registerBtn.addEventListener('click', showRegistrationScreen);
       refreshBtn.addEventListener('click', refreshScanner);
       submitRegisterBtn.addEventListener('click', submitRegistration);
@@ -1213,60 +1188,102 @@
       cookieAccept.addEventListener('click', acceptCookies);
       cookieDecline.addEventListener('click', declineCookies);
       
-      // Tambahkan event listener untuk input NIP
+      // Input events
       regNip.addEventListener('input', function(e) {
-        // Format NIP: hanya angka
         this.value = this.value.replace(/\D/g, '');
       });
       
-      // Handle back button (Android)
+      regNip.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          submitRegistration();
+        }
+      });
+      
+      // Handle back button
       window.addEventListener('popstate', function(e) {
         if (!registerScreen.classList.contains('d-none')) {
           showScannerScreen();
           e.preventDefault();
         }
       });
-      
-      // Handle online/offline status
+    }
+    
+    // ============================================
+    // NETWORK HANDLING
+    // ============================================
+    function setupNetworkListeners() {
       window.addEventListener('online', function() {
-        Swal.fire({
-          icon: 'success',
-          title: 'Koneksi Dipulihkan',
-          text: 'Anda kembali terhubung ke internet',
-          timer: 2000,
-          showConfirmButton: false,
-          toast: true,
-          position: 'top'
-        });
-        
+        showToast('success', 'Koneksi Dipulihkan', 'Anda kembali terhubung ke internet');
         if (userData && userData.nip) {
           updateStatusAbsensi();
         }
       });
       
       window.addEventListener('offline', function() {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Koneksi Terputus',
-          text: 'Periksa koneksi internet Anda',
-          timer: 2000,
-          showConfirmButton: false,
-          toast: true,
-          position: 'top'
-        });
+        showToast('warning', 'Koneksi Terputus', 'Periksa koneksi internet Anda');
+      });
+    }
+    
+    // ============================================
+    // PWA HANDLING
+    // ============================================
+    function setupPWAListeners() {
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show install prompt after delay
+        setTimeout(() => {
+          if (deferredPrompt && !localStorage.getItem(STORAGE_KEYS.PWA_PROMPT_SHOWN)) {
+            showPWAInstallPrompt();
+          }
+        }, 5000);
       });
       
-      // Handle visibility change - restart scanner when page becomes visible
-      document.addEventListener('visibilitychange', function() {
-        if (!document.hidden && scannerScreen.classList.contains('d-none') === false) {
-          if (!isScannerRunning) {
-            setTimeout(startScanner, 1000);
-          }
+      window.addEventListener('appinstalled', () => {
+        console.log('PWA installed successfully');
+        localStorage.setItem(STORAGE_KEYS.PWA_PROMPT_SHOWN, 'true');
+        deferredPrompt = null;
+        showToast('success', 'Aplikasi Terpasang', 'Absensi Apel siap digunakan dari home screen');
+      });
+    }
+    
+    function showPWAInstallPrompt() {
+      Swal.fire({
+        title: 'Pasang Aplikasi',
+        html: `<div style="text-align: center;">
+                 <div style="font-size: 3.5rem; color: #1976d2; margin-bottom: 15px;">
+                   <i class="fas fa-mobile-alt"></i>
+                 </div>
+                 <p style="font-size: 1.2rem;">Pasang aplikasi Absensi Apel ke home screen untuk akses lebih mudah?</p>
+                 <small style="font-size: 1rem;">Aplikasi dapat digunakan seperti aplikasi native tanpa perlu membuka browser.</small>
+               </div>`,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Pasang Sekarang',
+        confirmButtonColor: '#1976d2',
+        cancelButtonText: 'Nanti Saja',
+        width: isMobileDevice() ? '90%' : '400px',
+        background: '#f8f9fa'
+      }).then((result) => {
+        if (result.isConfirmed && deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            localStorage.setItem(STORAGE_KEYS.PWA_PROMPT_SHOWN, 'true');
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User installed the PWA');
+            }
+            deferredPrompt = null;
+          });
+        } else {
+          localStorage.setItem(STORAGE_KEYS.PWA_PROMPT_SHOWN, 'true');
         }
       });
-    });
+    }
     
-    // Check cookie consent
+    // ============================================
+    // COOKIE CONSENT
+    // ============================================
     function checkCookieConsent() {
       const consent = localStorage.getItem(STORAGE_KEYS.COOKIE_CONSENT);
       
@@ -1276,34 +1293,20 @@
           cookieBanner.classList.remove('d-none');
         }, 1500);
       } else if (consent === 'accepted') {
-        // User has accepted cookies, proceed with auto-login
-        console.log('Cookie consent: accepted');
         initializeApp();
       } else {
-        // User has declined cookies
-        console.log('Cookie consent: declined');
         showCookieWarning();
         setTimeout(initializeScanner, 1000);
       }
     }
     
-    // Accept cookies
     function acceptCookies() {
       localStorage.setItem(STORAGE_KEYS.COOKIE_CONSENT, 'accepted');
       cookieBanner.classList.add('d-none');
-      Swal.fire({
-        icon: 'success',
-        title: 'Cookies Diterima',
-        text: 'Data login akan disimpan di perangkat Anda',
-        timer: 2000,
-        showConfirmButton: false,
-        toast: true,
-        position: 'top'
-      });
+      showToast('success', 'Cookies Diterima', 'Data login akan disimpan di perangkat Anda');
       initializeApp();
     }
     
-    // Decline cookies
     function declineCookies() {
       localStorage.setItem(STORAGE_KEYS.COOKIE_CONSENT, 'declined');
       cookieBanner.classList.add('d-none');
@@ -1319,18 +1322,13 @@
       initializeScanner();
     }
     
-    // Show cookie warning
     function showCookieWarning() {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Cookies Dinonaktifkan',
-        html: 'Anda telah menolak penyimpanan cookies.<br><br>Data login tidak akan disimpan di perangkat Anda.',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#1976d2'
-      });
+      showToast('warning', 'Cookies Dinonaktifkan', 'Data login tidak akan disimpan di perangkat Anda');
     }
     
-    // Initialize application
+    // ============================================
+    // APP INITIALIZATION
+    // ============================================
     function initializeApp() {
       loadingText.textContent = 'Memeriksa data login tersimpan...';
       
@@ -1339,94 +1337,49 @@
         loadUserData();
         
         if (userData && userData.nip && userData.deviceId) {
-          // User data exists, validate with server
           validateStoredUserData();
         } else {
-          // No stored data, proceed to scanner
           loadingText.textContent = 'Menyiapkan scanner...';
           setTimeout(initializeScanner, 500);
         }
       }, 1000);
     }
     
-    // Validate stored user data with server
-    function validateStoredUserData() {
-      if (isAutoLoginAttempted) return;
+    function initializeScanner() {
+      loadingText.textContent = 'Menyiapkan scanner QR Code...';
       
-      isAutoLoginAttempted = true;
-      loadingText.textContent = 'Memvalidasi data login...';
+      if (typeof Html5Qrcode === 'undefined') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Library Tidak Ditemukan',
+          html: 'Library QR Scanner gagal dimuat.<br><br>Periksa koneksi internet Anda.',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#1976d2'
+        });
+        return;
+      }
       
-      const deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+      try {
+        html5QrCode = new Html5Qrcode("reader");
+        console.log("Scanner initialized successfully");
+      } catch (e) {
+        console.error("Failed to initialize scanner:", e);
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal Inisialisasi Scanner',
+          text: 'Terjadi kesalahan saat memulai scanner QR Code',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#1976d2'
+        });
+        return;
+      }
       
-      google.script.run.withSuccessHandler((response) => {
-        try {
-          const result = JSON.parse(response);
-          
-          if (result.status === "registered") {
-            // Stored data is valid, auto-login
-            autoLoginSuccess(result);
-          } else {
-            // Stored data is invalid, clear and proceed
-            clearInvalidUserData();
-            initializeScanner();
-          }
-        } catch (e) {
-          console.error("Error parsing validation response:", e);
-          clearInvalidUserData();
-          initializeScanner();
-        }
-      }).withFailureHandler((error) => {
-        console.error("Validation failed:", error);
-        // If validation fails, still try to use stored data
-        if (userData && userData.nip) {
-          updateUserInfo();
-          initializeScanner();
-        } else {
-          clearInvalidUserData();
-          initializeScanner();
-        }
-      }).checkRegistrationStatus(deviceId);
+      showScannerScreen();
     }
     
-    // Auto-login success
-    function autoLoginSuccess(result) {
-      // Update user data with server response
-      userData = {
-        nip: result.nip,
-        nama: result.nama,
-        deviceId: result.deviceId,
-        jabatan: result.jabatan || ""
-      };
-      
-      // Save to localStorage
-      saveUserData();
-      
-      // Update UI
-      updateUserInfo();
-      
-      // Show success message
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Otomatis Berhasil!',
-        html: `Selamat datang kembali <strong>${result.nama}</strong>`,
-        timer: 2000,
-        showConfirmButton: false,
-        toast: true,
-        position: 'top'
-      }).then(() => {
-        initializeScanner();
-      });
-    }
-    
-    // Clear invalid user data
-    function clearInvalidUserData() {
-      userData = null;
-      localStorage.removeItem(STORAGE_KEYS.USER_DATA);
-      localStorage.removeItem(STORAGE_KEYS.LAST_LOGIN);
-      logoutBtn.classList.add('d-none');
-    }
-    
-    // Load user data from localStorage
+    // ============================================
+    // USER DATA MANAGEMENT
+    // ============================================
     function loadUserData() {
       try {
         const storedData = localStorage.getItem(STORAGE_KEYS.USER_DATA);
@@ -1455,7 +1408,6 @@
       }
     }
     
-    // Save user data to localStorage
     function saveUserData() {
       if (!userData) return;
       
@@ -1468,13 +1420,68 @@
       }
     }
     
-    // Update user info display
+    function clearInvalidUserData() {
+      userData = null;
+      localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+      localStorage.removeItem(STORAGE_KEYS.LAST_LOGIN);
+      logoutBtn.classList.add('d-none');
+    }
+    
+    // ============================================
+    // USER VALIDATION
+    // ============================================
+    function validateStoredUserData() {
+      if (isAutoLoginAttempted) return;
+      
+      isAutoLoginAttempted = true;
+      loadingText.textContent = 'Memvalidasi data login...';
+      
+      callGASFunction('checkRegistrationStatus', { deviceId: deviceId })
+        .then(response => {
+          if (response.status === "registered") {
+            autoLoginSuccess(response);
+          } else {
+            clearInvalidUserData();
+            initializeScanner();
+          }
+        })
+        .catch(error => {
+          console.error("Validation failed:", error);
+          if (userData && userData.nip) {
+            updateUserInfo();
+            initializeScanner();
+          } else {
+            clearInvalidUserData();
+            initializeScanner();
+          }
+        });
+    }
+    
+    function autoLoginSuccess(result) {
+      userData = {
+        nip: result.nip,
+        nama: result.nama,
+        deviceId: result.deviceId,
+        jabatan: result.jabatan || ""
+      };
+      
+      saveUserData();
+      updateUserInfo();
+      
+      showToast('success', 'Login Otomatis Berhasil!', `Selamat datang kembali ${result.nama}`)
+        .then(() => {
+          initializeScanner();
+        });
+    }
+    
+    // ============================================
+    // UI UPDATES
+    // ============================================
     function updateUserInfo() {
       if (userData && userData.nip && userData.nama) {
         userName.textContent = userData.nama;
         userNip.textContent = userData.nip;
         
-        // Tampilkan jabatan jika ada
         if (userData.jabatan) {
           userStatus.innerHTML = `Jabatan: <span class="highlight">${userData.jabatan}</span> | Status: <span class="highlight" style="color: #4CAF50;">Terdaftar</span>`;
         } else {
@@ -1483,8 +1490,6 @@
         
         userInfoCard.classList.remove('d-none');
         logoutBtn.classList.remove('d-none');
-        
-        // Update status absensi
         updateStatusAbsensi();
       } else {
         userName.textContent = "Nama Pegawai";
@@ -1492,71 +1497,11 @@
         userStatus.innerHTML = 'Status: <span class="highlight" style="color: #FF9800;">Belum terdaftar</span>';
         userInfoCard.classList.add('d-none');
         logoutBtn.classList.add('d-none');
-        
-        // Sembunyikan badge jika tidak terdaftar
         sisaKesempatanBadge.classList.add('d-none');
         scannerMessage.classList.add('d-none');
       }
     }
     
-    // Generate device ID
-    function generateDeviceId() {
-      let deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
-      if (!deviceId) {
-        // Generate unique device ID
-        const timestamp = Date.now();
-        const random = Math.floor(Math.random() * 1000000);
-        const userAgentHash = navigator.userAgent.length % 10000;
-        deviceId = `DEV_${timestamp}_${random}_${userAgentHash}`;
-        localStorage.setItem(STORAGE_KEYS.DEVICE_ID, deviceId);
-      }
-      regDeviceId.value = deviceId;
-      return deviceId;
-    }
-    
-    // Logout user
-    function logoutUser() {
-      Swal.fire({
-        title: 'Konfirmasi Logout',
-        html: `Apakah Anda yakin ingin logout?<br><br>
-               <small>Data login akan dihapus dari perangkat ini.</small>`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Logout',
-        confirmButtonColor: '#d33',
-        cancelButtonText: 'Batal',
-        cancelButtonColor: '#1976d2'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Clear user data
-          clearInvalidUserData();
-          
-          // Stop scanner
-          stopScanner();
-          
-          // Update UI
-          updateUserInfo();
-          
-          // Show message
-          Swal.fire({
-            icon: 'success',
-            title: 'Logout Berhasil',
-            text: 'Data login telah dihapus dari perangkat',
-            timer: 2000,
-            showConfirmButton: false,
-            toast: true,
-            position: 'top'
-          }).then(() => {
-            // Refresh scanner
-            setTimeout(() => {
-              startScanner();
-            }, 500);
-          });
-        }
-      });
-    }
-    
-    // Update date and time display
     function updateDateTime() {
       const now = new Date();
       const dateStr = now.toLocaleDateString('id-ID', {
@@ -1577,7 +1522,6 @@
       currentDate.textContent = now.toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
     }
     
-    // Check location status
     function checkLocationStatus() {
       if (navigator.geolocation) {
         locationStatus.textContent = "Aktif";
@@ -1590,16 +1534,16 @@
       }
     }
     
-    // Show scanner screen
+    // ============================================
+    // SCREEN NAVIGATION
+    // ============================================
     function showScannerScreen() {
       loadingScreen.classList.add('d-none');
       registerScreen.classList.add('d-none');
       scannerScreen.classList.remove('d-none');
       
-      // Push state to history
       history.pushState({ screen: 'scanner' }, '', '#scanner');
       
-      // Restart scanner
       setTimeout(() => {
         if (!isScannerRunning) {
           startScanner();
@@ -1607,93 +1551,24 @@
       }, 500);
     }
     
-    // Show registration screen
     function showRegistrationScreen() {
       scannerScreen.classList.add('d-none');
       registerScreen.classList.remove('d-none');
       
-      // Push state to history
       history.pushState({ screen: 'register' }, '', '#register');
-      
-      // Stop scanner
       stopScanner();
       
-      // Focus ke input NIP
       setTimeout(() => {
         regNip.focus();
       }, 300);
     }
     
-    // Refresh scanner
-    function refreshScanner() {
-      stopScanner();
-      
-      Swal.fire({
-        title: 'Merefresh Scanner...',
-        allowOutsideClick: false,
-        timer: 1000,
-        timerProgressBar: true,
-        didOpen: () => {
-          Swal.showLoading();
-        }
-      }).then(() => {
-        startScanner();
-        Swal.fire({
-          icon: 'success',
-          title: 'Scanner Siap!',
-          text: 'QR Code scanner telah direfresh',
-          timer: 1500,
-          showConfirmButton: false,
-          toast: true,
-          position: 'top'
-        });
-      });
-    }
-    
-    // Initialize QR scanner
-    function initializeScanner() {
-      loadingText.textContent = 'Menyiapkan scanner QR Code...';
-      
-      // Check if Html5Qrcode is available
-      if (typeof Html5Qrcode === 'undefined') {
-        Swal.fire({
-          icon: 'error',
-          title: 'Library Tidak Ditemukan',
-          html: 'Library QR Scanner gagal dimuat.<br><br>Periksa koneksi internet Anda.',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#1976d2'
-        });
-        return;
-      }
-      
-      // Initialize the scanner
-      try {
-        html5QrCode = new Html5Qrcode("reader");
-        console.log("Scanner initialized successfully");
-      } catch (e) {
-        console.error("Failed to initialize scanner:", e);
-        Swal.fire({
-          icon: 'error',
-          title: 'Gagal Inisialisasi Scanner',
-          text: 'Terjadi kesalahan saat memulai scanner QR Code',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#1976d2'
-        });
-        return;
-      }
-      
-      // Show scanner screen
-      showScannerScreen();
-    }
-    
-    // Start QR scanner
+    // ============================================
+    // SCANNER FUNCTIONS
+    // ============================================
     function startScanner() {
-      if (!html5QrCode) {
-        console.error("Scanner not initialized");
-        return;
-      }
+      if (!html5QrCode) return;
       
-      // Check for camera support
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         Swal.fire({
           icon: 'error',
@@ -1705,7 +1580,6 @@
         return;
       }
       
-      // Get available cameras
       Html5Qrcode.getCameras().then(devices => {
         if (!devices || devices.length === 0) {
           Swal.fire({
@@ -1718,11 +1592,7 @@
           return;
         }
         
-        // Use back camera if available, otherwise use first camera
         let cameraId = devices[0].id;
-        let cameraLabel = devices[0].label;
-        
-        // Try to find back camera
         const backCamera = devices.find(device => {
           const label = device.label.toLowerCase();
           return label.includes('back') || label.includes('rear') || label.includes('belakang');
@@ -1730,23 +1600,15 @@
         
         if (backCamera) {
           cameraId = backCamera.id;
-          cameraLabel = backCamera.label;
         }
         
-        console.log(`Using camera: ${cameraLabel}`);
-        
-        // Calculate QR box size for mobile
         const qrboxSize = Math.min(window.innerWidth * 0.9, 750);
         
-        // Start scanning
         html5QrCode.start(
           cameraId,
           {
-            fps: 20,
-            qrbox: { 
-              width: qrboxSize, 
-              height: qrboxSize 
-            },
+            fps: CONFIG.SCANNER_FPS,
+            qrbox: { width: qrboxSize, height: qrboxSize },
             aspectRatio: 1.0,
             disableFlip: false,
             focusMode: "continuous",
@@ -1756,78 +1618,16 @@
             showTorchButtonIfSupported: true,
             showZoomSliderIfSupported: true
           },
-          (decodedText) => {
-            onScanSuccess(decodedText);
-          },
-          (errorMessage) => {
-            if (!errorMessage.includes("NotFoundException")) {
-              console.log("Scan debug:", errorMessage);
-            }
-          }
+          onScanSuccess,
+          onScanError
         ).then(() => {
           isScannerRunning = true;
           console.log("Scanner started successfully");
-          
-          // Hide loading screen if still showing
           loadingScreen.classList.add('d-none');
-          
         }).catch(err => {
-          console.error("Failed to start scanner with specific camera:", err);
-          
-          // Fallback: try with environment-facing mode
-          Swal.fire({
-            title: 'Menyiapkan Scanner...',
-            allowOutsideClick: false,
-            timer: 1000,
-            didOpen: () => {
-              Swal.showLoading();
-            }
-          }).then(() => {
-            html5QrCode.start(
-              { facingMode: "environment" },
-              {
-                fps: 15,
-                qrbox: { 
-                  width: qrboxSize, 
-                  height: qrboxSize 
-                },
-                aspectRatio: 1.0
-              },
-              (decodedText) => {
-                onScanSuccess(decodedText);
-              },
-              (errorMessage) => {
-                console.log("Scan error:", errorMessage);
-              }
-            ).then(() => {
-              isScannerRunning = true;
-              console.log("Scanner started with environment mode");
-            }).catch(finalErr => {
-              console.error("Final scanner error:", finalErr);
-              
-              let errorMsg = "Gagal mengakses kamera. ";
-              if (finalErr.message.includes("Permission")) {
-                errorMsg += "Izinkan akses kamera di pengaturan browser.";
-              } else if (finalErr.message.includes("NotFound")) {
-                errorMsg += "Kamera tidak ditemukan.";
-              } else {
-                errorMsg += finalErr.message;
-              }
-              
-              Swal.fire({
-                icon: 'error',
-                title: 'Gagal Mengakses Kamera',
-                html: `${errorMsg}<br><br>
-                       <small>1. Pastikan izin kamera diaktifkan<br>
-                       2. Periksa jika kamera sedang digunakan aplikasi lain<br>
-                       3. Coba refresh halaman atau gunakan browser lain</small>`,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#1976d2'
-              });
-            });
-          });
+          console.error("Failed to start scanner:", err);
+          handleCameraError(err);
         });
-        
       }).catch(err => {
         console.error("Error getting cameras:", err);
         Swal.fire({
@@ -1841,7 +1641,6 @@
       });
     }
     
-    // Stop scanner
     function stopScanner() {
       if (html5QrCode && isScannerRunning) {
         try {
@@ -1853,17 +1652,28 @@
       }
     }
     
-    // Handle successful scan
-    function onScanSuccess(decodedText) {
-      // Stop scanner temporarily
+    function refreshScanner() {
       stopScanner();
       
+      Swal.fire({
+        title: 'Merefresh Scanner...',
+        allowOutsideClick: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      }).then(() => {
+        startScanner();
+        showToast('success', 'Scanner Siap!', 'QR Code scanner telah direfresh');
+      });
+    }
+    
+    function onScanSuccess(decodedText) {
+      stopScanner();
       console.log("QR Code detected:", decodedText);
-      
-      // Play scan sound
       playScanSound();
       
-      // Determine apel type from QR code
       let jenis = "";
       if (decodedText.includes("APEL_PAGI") || decodedText.toLowerCase().includes("pagi")) {
         jenis = "pagi";
@@ -1886,7 +1696,6 @@
       
       currentApelType = jenis;
       
-      // Show scanning success feedback
       Swal.fire({
         icon: 'success',
         title: 'QR Code Berhasil Discan!',
@@ -1901,68 +1710,85 @@
         showConfirmButton: false,
         background: '#f8f9fa'
       }).then(() => {
-        // Check if user is registered
         if (!userData || !userData.nip || !userData.deviceId) {
-          // Cek apakah device sudah terdaftar di sistem
-          const deviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
-          
-          Swal.fire({
-            title: 'Memeriksa Status Akun...',
-            html: '<div style="text-align: center;">' +
-                  '<div class="spinner" style="width: 50px; height: 50px; margin: 0 auto 20px;"></div>' +
-                  '<p style="font-size: 1.1rem;">Memeriksa apakah perangkat Anda sudah terdaftar...</p>' +
-                  '</div>',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            background: '#f8f9fa'
-          });
-          
-          google.script.run.withSuccessHandler((response) => {
-            Swal.close();
-            
-            let result;
-            try {
-              result = JSON.parse(response);
-            } catch (e) {
-              console.error("Error parsing response:", e);
-              promptManualRegistration(jenis);
-              return;
-            }
-            
-            if (result.status === "registered") {
-              // Auto-login dengan data dari server
-              userData = {
-                nip: result.nip,
-                nama: result.nama,
-                deviceId: deviceId,
-                jabatan: result.jabatan || ""
-              };
-              
-              saveUserData();
-              updateUserInfo();
-              
-              // Lanjutkan dengan absensi
-              proceedWithAttendance(jenis);
-              
-            } else {
-              // Perangkat belum terdaftar, tampilkan form
-              promptManualRegistration(jenis);
-            }
-            
-          }).withFailureHandler((error) => {
-            Swal.close();
-            promptManualRegistration(jenis);
-          }).checkRegistrationStatus(deviceId);
-          
-          return;
+          checkDeviceRegistrationBeforeAttendance(jenis);
+        } else {
+          proceedWithAttendance(jenis);
         }
-        
-        // User is registered, proceed with attendance
-        proceedWithAttendance(jenis);
       });
     }
     
-    // Fungsi untuk prompt registrasi manual
+    function onScanError(errorMessage) {
+      if (!errorMessage.includes("NotFoundException")) {
+        console.log("Scan debug:", errorMessage);
+      }
+    }
+    
+    function handleCameraError(err) {
+      let errorMsg = "Tidak dapat mengakses kamera. ";
+      if (err.name === 'NotAllowedError') {
+        errorMsg = "Izin kamera ditolak. Izinkan akses kamera di pengaturan browser.";
+      } else if (err.name === 'NotFoundError') {
+        errorMsg = "Kamera tidak ditemukan. Pastikan kamera tersedia.";
+      }
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Kamera Error',
+        html: `${errorMsg}<br><br>
+               <button id="manualQR" class="btn btn-primary" style="padding: 10px 20px; margin-top: 10px;">
+                 <i class="fas fa-keyboard"></i> Input QR Code Manual
+               </button>`,
+        showConfirmButton: false,
+        background: '#f8f9fa',
+        didOpen: () => {
+          document.getElementById('manualQR').addEventListener('click', () => {
+            promptManualQRInput();
+          });
+        }
+      });
+    }
+    
+    // ============================================
+    // ATTENDANCE PROCESSING
+    // ============================================
+    function checkDeviceRegistrationBeforeAttendance(jenis) {
+      Swal.fire({
+        title: 'Memeriksa Status Akun...',
+        html: '<div style="text-align: center;">' +
+              '<div class="spinner" style="width: 50px; height: 50px; margin: 0 auto 20px;"></div>' +
+              '<p style="font-size: 1.1rem;">Memeriksa apakah perangkat Anda sudah terdaftar...</p>' +
+              '</div>',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        background: '#f8f9fa'
+      });
+      
+      callGASFunction('checkRegistrationStatus', { deviceId: deviceId })
+        .then(response => {
+          Swal.close();
+          
+          if (response.status === "registered") {
+            userData = {
+              nip: response.nip,
+              nama: response.nama,
+              deviceId: deviceId,
+              jabatan: response.jabatan || ""
+            };
+            
+            saveUserData();
+            updateUserInfo();
+            proceedWithAttendance(jenis);
+          } else {
+            promptManualRegistration(jenis);
+          }
+        })
+        .catch(error => {
+          Swal.close();
+          promptManualRegistration(jenis);
+        });
+    }
+    
     function promptManualRegistration(jenis) {
       Swal.fire({
         icon: 'info',
@@ -1988,7 +1814,6 @@
       });
     }
     
-    // Proceed with attendance submission
     function proceedWithAttendance(jenis) {
       Swal.fire({
         title: 'Memproses Absensi',
@@ -2001,47 +1826,22 @@
         background: '#f8f9fa'
       });
       
-      // Get current location
       navigator.geolocation.getCurrentPosition(
         (position) => {
           submitAttendance(position.coords.latitude, position.coords.longitude, jenis);
         },
         (error) => {
           Swal.close();
-          
-          let errorMessage = "Gagal mengakses lokasi";
-          switch(error.code) {
-            case error.PERMISSION_DENIED:
-              errorMessage = "Izin lokasi ditolak. Aktifkan lokasi di pengaturan perangkat.";
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMessage = "Informasi lokasi tidak tersedia. Pastikan GPS aktif.";
-              break;
-            case error.TIMEOUT:
-              errorMessage = "Permintaan lokasi timeout. Periksa koneksi internet.";
-              break;
-          }
-          
-          Swal.fire({
-            icon: 'error',
-            title: errorMessage,
-            html: `Izinkan akses lokasi untuk melanjutkan absensi.<br><br>
-                   <small>Absensi memerlukan verifikasi lokasi untuk validasi kehadiran.</small>`,
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#1976d2'
-          }).then(() => {
-            startScanner();
-          });
+          handleLocationError(error);
         },
         { 
-          timeout: 15000, 
+          timeout: CONFIG.LOCATION_TIMEOUT, 
           enableHighAccuracy: true,
           maximumAge: 0
         }
       );
     }
     
-    // Submit attendance to server
     function submitAttendance(lat, lon, jenis) {
       Swal.update({
         title: 'Mengirim Absensi',
@@ -2051,164 +1851,48 @@
               '</div>'
       });
       
-      google.script.run.withSuccessHandler((response) => {
+      callGASFunction('submitAbsen', {
+        nip: userData.nip,
+        deviceId: userData.deviceId,
+        jenisApel: jenis,
+        latUser: lat,
+        lonUser: lon
+      })
+      .then(response => {
         Swal.close();
         
         if (response.status === "success") {
-          // Play success sound
           playSuccessSound();
-          
-          Swal.fire({
-            icon: 'success',
-            title: 'Absensi Berhasil!',
-            html: `<div style="text-align: center;">
-                     <div style="font-size: 4.5rem; color: #4CAF50; margin-bottom: 20px;">
-                       <i class="fas fa-check-circle"></i>
-                     </div>
-                     <h3 style="color: #2e7d32; font-size: 1.6rem;">${response.message}</h3>
-                     <div style="background: #f0f8ff; padding: 20px; border-radius: 12px; margin: 20px 0; text-align: left; font-size: 1.1rem;">
-                       <p><strong>Jenis Apel:</strong> ${jenis === 'pagi' ? 'Apel Pagi' : 'Apel Sore'}</p>
-                       <p><strong>Waktu:</strong> ${new Date().toLocaleTimeString('id-ID')}</p>
-                       <p><strong>Tanggal:</strong> ${new Date().toLocaleDateString('id-ID')}</p>
-                     </div>
-                     <p style="font-size: 1rem; color: #666;">Absensi telah tercatat di sistem</p>
-                   </div>`,
-            confirmButtonText: 'Selesai',
-            confirmButtonColor: '#4CAF50',
-            allowOutsideClick: false,
-            width: isMobileDevice() ? '90%' : '500px',
-            background: '#f8f9fa'
-          }).then(() => {
-            // Update status absensi
-            updateStatusAbsensi();
-            
-            // Restart scanner
-            startScanner();
-          });
+          showAttendanceSuccess(response, jenis);
         } else if (response.message.includes("DEVICE")) {
-          // Device not registered or reset
-          Swal.fire({
-            icon: 'warning',
-            title: 'Perangkat Tidak Terdaftar',
-            html: `<p style="font-size: 1.1rem;">${response.message}</p>
-                   <small>Perangkat Anda perlu didaftarkan ulang ke sistem.</small>`,
-            confirmButtonText: 'Daftar Ulang',
-            confirmButtonColor: '#1976d2'
-          }).then(() => {
-            // Clear user data and show registration
-            clearInvalidUserData();
-            updateUserInfo();
-            showRegistrationScreen();
-          });
+          handleDeviceRegistrationError(response);
         } else {
-          // Other errors
-          Swal.fire({
-            icon: 'error',
-            title: 'Absensi Gagal',
-            html: `<p style="font-size: 1.1rem;">${response.message}</p>
-                   <small>Silakan scan ulang QR Code jika sudah sesuai ketentuan waktu dan lokasi.</small>`,
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#1976d2'
-          }).then(() => {
-            startScanner();
-          });
+          showAttendanceError(response);
         }
-        
-      }).withFailureHandler((error) => {
+      })
+      .catch(error => {
         Swal.close();
         console.error("Server error:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Kesalahan Server',
-          html: `Terjadi kesalahan saat mengirim data.<br><br>
-                 <small>Periksa koneksi internet Anda dan coba lagi.</small>`,
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#1976d2'
-        }).then(() => {
-          startScanner();
-        });
-        
-      }).submitAbsen(
-        userData.nip,
-        userData.deviceId,
-        jenis,
-        lat,
-        lon
-      );
+        showToast('error', 'Kesalahan Server', 'Periksa koneksi internet Anda dan coba lagi')
+          .then(() => {
+            startScanner();
+          });
+      });
     }
     
-    // Play scan sound
-    function playScanSound() {
-      try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        oscillator.frequency.value = 1200;
-        oscillator.type = 'sine';
-        
-        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-        
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.15);
-      } catch (e) {
-        // Sound not supported, ignore
-      }
-    }
-    
-    // Play success sound
-    function playSuccessSound() {
-      try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Play a pleasant success tone
-        const oscillator1 = audioContext.createOscillator();
-        const oscillator2 = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator1.connect(gainNode);
-        oscillator2.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        oscillator1.frequency.value = 523.25; // C5
-        oscillator2.frequency.value = 659.25; // E5
-        oscillator1.type = 'sine';
-        oscillator2.type = 'sine';
-        
-        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
-        
-        oscillator1.start(audioContext.currentTime);
-        oscillator2.start(audioContext.currentTime);
-        oscillator1.stop(audioContext.currentTime + 0.6);
-        oscillator2.stop(audioContext.currentTime + 0.6);
-      } catch (e) {
-        // Sound not supported, ignore
-      }
-    }
-    
-    // Submit registration
+    // ============================================
+    // REGISTRATION PROCESS
+    // ============================================
     function submitRegistration() {
       const nip = regNip.value.trim();
       
-      // Validasi input
+      // Validation
       if (!nip) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'NIP Kosong',
-          text: 'Masukkan NIP terlebih dahulu',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#1976d2'
-        });
+        showToast('warning', 'NIP Kosong', 'Masukkan NIP terlebih dahulu');
         regNip.focus();
         return;
       }
       
-      // Format NIP hanya angka, minimal 8 digit
       if (!/^\d+$/.test(nip)) {
         Swal.fire({
           icon: 'warning',
@@ -2222,11 +1906,11 @@
         return;
       }
       
-      if (nip.length < 8 || nip.length > 20) {
+      if (nip.length < CONFIG.MIN_NIP_LENGTH || nip.length > CONFIG.MAX_NIP_LENGTH) {
         Swal.fire({
           icon: 'warning',
           title: 'Panjang NIP Tidak Sesuai',
-          html: 'NIP harus antara 8-20 digit.<br><br>Contoh: 197001012000011001',
+          html: `NIP harus antara ${CONFIG.MIN_NIP_LENGTH}-${CONFIG.MAX_NIP_LENGTH} digit.<br><br>Contoh: 197001012000011001`,
           confirmButtonText: 'OK',
           confirmButtonColor: '#1976d2'
         });
@@ -2235,9 +1919,6 @@
         return;
       }
       
-      const deviceId = regDeviceId.value;
-      
-      // Tampilkan loading dengan informasi NIP
       Swal.fire({
         title: 'Memeriksa Data Pegawai...',
         html: `<div style="text-align: center;">
@@ -2250,118 +1931,43 @@
         background: '#f8f9fa'
       });
       
-      // Panggil fungsi cek duplikasi
-      google.script.run.withSuccessHandler((response) => {
+      callGASFunction('checkDuplicateRegistration', {
+        nip: nip,
+        deviceId: deviceId
+      })
+      .then(response => {
         Swal.close();
-        
-        // Parse response JSON
-        let result;
-        try {
-          result = JSON.parse(response);
-        } catch (e) {
-          console.error("Error parsing response:", e);
-          Swal.fire({
-            icon: 'error',
-            title: 'Response Error',
-            text: 'Terjadi kesalahan dalam memproses response',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#1976d2'
-          });
-          return;
-        }
-        
-        // Handle berbagai status response
-        switch(result.status) {
-          case "duplicate":
-            handleDuplicateRegistration(result);
-            break;
-            
-          case "available":
-            handleAvailableRegistration(nip, deviceId, result);
-            break;
-            
-          case "device_duplicate":
-            Swal.fire({
-              icon: 'error',
-              title: 'Perangkat Sudah Terdaftar',
-              html: `<div style="text-align: center;">
-                      <p style="font-size: 1.1rem;">Perangkat ini sudah terdaftar atas nama:</p>
-                      <div style="background: #ffebee; padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 5px solid #f44336;">
-                        <p style="font-size: 1.2rem; font-weight: bold;">${result.existingNama}</p>
-                        <p>NIP: ${result.existingNip}</p>
-                      </div>
-                      <p style="color: #f44336; font-size: 1rem;">
-                        <i class="fas fa-exclamation-triangle"></i> 
-                        Satu perangkat hanya untuk satu akun
-                      </p>
-                     </div>`,
-              confirmButtonText: 'OK',
-              confirmButtonColor: '#1976d2'
-            });
-            break;
-            
-          case "nip_duplicate":
-            Swal.fire({
-              icon: 'warning',
-              title: 'NIP Sudah Terdaftar',
-              html: `<div style="text-align: center;">
-                      <p style="font-size: 1.1rem;">NIP <strong>${nip}</strong> sudah terdaftar dengan perangkat lain</p>
-                      <div style="background: #fff3e0; padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 5px solid #FF9800;">
-                        <p>Atas nama: <strong>${result.existingNama}</strong></p>
-                        <p>Device ID: ${result.existingDevice.substring(0, 20)}...</p>
-                      </div>
-                      <p style="font-size: 1rem;">
-                        Hubungi admin jika ini adalah perangkat baru Anda
-                      </p>
-                     </div>`,
-              confirmButtonText: 'Hubungi Admin',
-              confirmButtonColor: '#1976d2',
-              showCancelButton: true,
-              cancelButtonText: 'OK'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                window.open('https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20perlu%20bantuan%20reset%20perangkat%20untuk%20NIP%20' + nip, '_blank');
-              }
-            });
-            break;
-            
-          case "error":
-            Swal.fire({
-              icon: 'error',
-              title: 'Validasi Gagal',
-              html: `<p style="font-size: 1.1rem;">${result.message}</p>
-                     <small>Pastikan NIP Anda benar dan terdaftar di sistem</small>`,
-              confirmButtonText: 'OK',
-              confirmButtonColor: '#1976d2'
-            });
-            break;
-            
-          default:
-            Swal.fire({
-              icon: 'error',
-              title: 'Status Tidak Dikenali',
-              text: 'Terjadi kesalahan tidak terduga',
-              confirmButtonText: 'OK',
-              confirmButtonColor: '#1976d2'
-            });
-        }
-        
-      }).withFailureHandler((error) => {
+        handleRegistrationResponse(response, nip);
+      })
+      .catch(error => {
         Swal.close();
-        Swal.fire({
-          icon: 'error',
-          title: 'Koneksi Gagal',
-          html: `Tidak dapat terhubung ke server.<br><br>
-                 <small>Periksa koneksi internet Anda dan coba lagi.</small>`,
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#1976d2'
-        });
-      }).checkDuplicateRegistration(nip, deviceId);
+        showToast('error', 'Koneksi Gagal', 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda');
+      });
     }
     
-    // Fungsi untuk handle registrasi duplicate (sudah terdaftar)
+    function handleRegistrationResponse(result, nip) {
+      switch(result.status) {
+        case "duplicate":
+          handleDuplicateRegistration(result);
+          break;
+        case "available":
+          handleAvailableRegistration(nip, result);
+          break;
+        case "device_duplicate":
+          showDeviceDuplicateError(result);
+          break;
+        case "nip_duplicate":
+          showNipDuplicateError(result, nip);
+          break;
+        case "error":
+          showRegistrationError(result);
+          break;
+        default:
+          showToast('error', 'Status Tidak Dikenali', 'Terjadi kesalahan tidak terduga');
+      }
+    }
+    
     function handleDuplicateRegistration(result) {
-      // Simpan data user ke localStorage
       userData = {
         nip: result.nip,
         nama: result.nama,
@@ -2372,7 +1978,6 @@
       saveUserData();
       updateUserInfo();
       
-      // Tampilkan informasi akun yang ditemukan
       Swal.fire({
         icon: 'success',
         title: 'Akun Ditemukan!',
@@ -2400,9 +2005,7 @@
       });
     }
     
-    // Fungsi untuk handle registrasi baru
-    function handleAvailableRegistration(nip, deviceId, result) {
-      // Tampilkan konfirmasi data pegawai
+    function handleAvailableRegistration(nip, result) {
       Swal.fire({
         icon: 'info',
         title: 'Konfirmasi Data Pegawai',
@@ -2428,7 +2031,7 @@
         width: isMobileDevice() ? '90%' : '500px'
       }).then((confirmation) => {
         if (confirmation.isConfirmed) {
-          proceedWithRegistration(nip, deviceId, result);
+          proceedWithRegistration(nip, result);
         } else {
           regNip.focus();
           regNip.select();
@@ -2436,8 +2039,7 @@
       });
     }
     
-    // Fungsi untuk melanjutkan pendaftaran baru
-    function proceedWithRegistration(nip, deviceId, preCheckResult) {
+    function proceedWithRegistration(nip, preCheckResult) {
       Swal.fire({
         title: 'Mendaftarkan Akun',
         html: `<div style="text-align: center;">
@@ -2450,38 +2052,24 @@
         background: '#f8f9fa'
       });
       
-      // Kirim data pendaftaran ke server
-      google.script.run.withSuccessHandler((response) => {
+      callGASFunction('signupUser', {
+        nip: nip,
+        deviceId: deviceId
+      })
+      .then(response => {
         Swal.close();
         
-        let result;
-        try {
-          result = JSON.parse(response);
-        } catch (e) {
-          console.error("Error parsing response:", e);
-          Swal.fire({
-            icon: 'error',
-            title: 'Response Error',
-            text: 'Terjadi kesalahan dalam memproses response',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#1976d2'
-          });
-          return;
-        }
-        
-        if (result.status === "ok") {
-          // Simpan data user ke localStorage
+        if (response.status === "ok") {
           userData = {
-            nip: result.nip,
-            nama: result.nama,
+            nip: response.nip,
+            nama: response.nama,
             deviceId: deviceId,
-            jabatan: result.jabatan || ""
+            jabatan: response.jabatan || ""
           };
           
           saveUserData();
           updateUserInfo();
           
-          // Tampilkan sukses
           Swal.fire({
             icon: 'success',
             title: 'Pendaftaran Berhasil!',
@@ -2491,9 +2079,9 @@
                      </div>
                      <h3 style="color: #2e7d32; font-size: 1.6rem;">Selamat Bergabung!</h3>
                      <div style="background: #f0f8ff; padding: 25px; border-radius: 12px; margin: 20px 0; text-align: left; font-size: 1.1rem;">
-                       <p><strong>Nama:</strong> ${result.nama}</p>
-                       <p><strong>NIP:</strong> ${result.nip}</p>
-                       ${result.jabatan ? `<p><strong>Jabatan:</strong> ${result.jabatan}</p>` : ''}
+                       <p><strong>Nama:</strong> ${response.nama}</p>
+                       <p><strong>NIP:</strong> ${response.nip}</p>
+                       ${response.jabatan ? `<p><strong>Jabatan:</strong> ${response.jabatan}</p>` : ''}
                        <p><strong>Status:</strong> <span style="color: #4CAF50; font-weight: bold;">AKTIF</span></p>
                        <p><strong>Tanggal Daftar:</strong> ${new Date().toLocaleDateString('id-ID')}</p>
                      </div>
@@ -2508,7 +2096,6 @@
           }).then(() => {
             showScannerScreen();
             
-            // Jika ada apel yang pending, lanjutkan
             if (currentApelType) {
               setTimeout(() => {
                 proceedWithAttendance(currentApelType);
@@ -2516,91 +2103,156 @@
             }
           });
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Pendaftaran Gagal',
-            html: `<p style="font-size: 1.1rem;">${result.message}</p>
-                   <small>Silakan coba lagi atau hubungi admin</small>`,
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#1976d2'
-          });
+          showRegistrationError(response);
         }
-      }).withFailureHandler((error) => {
+      })
+      .catch(error => {
         Swal.close();
-        Swal.fire({
-          icon: 'error',
-          title: 'Kesalahan Server',
-          html: `Terjadi kesalahan saat mendaftar.<br><br>
-                 <small>Periksa koneksi internet Anda dan coba lagi.</small>`,
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#1976d2'
-        });
-      }).signupUser(nip, deviceId);
+        showToast('error', 'Kesalahan Server', 'Terjadi kesalahan saat mendaftar. Periksa koneksi internet Anda');
+      });
     }
     
-    // Update status absensi
+    // ============================================
+    // UTILITY FUNCTIONS
+    // ============================================
+    function generateDeviceId() {
+      let storedDeviceId = localStorage.getItem(STORAGE_KEYS.DEVICE_ID);
+      if (!storedDeviceId) {
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 1000000);
+        const userAgentHash = navigator.userAgent.length % 10000;
+        storedDeviceId = `DEV_${timestamp}_${random}_${userAgentHash}`;
+        localStorage.setItem(STORAGE_KEYS.DEVICE_ID, storedDeviceId);
+      }
+      deviceId = storedDeviceId;
+      regDeviceId.value = storedDeviceId;
+      return storedDeviceId;
+    }
+    
     function updateStatusAbsensi() {
       if (!userData || !userData.nip) return;
       
-      google.script.run.withSuccessHandler((status) => {
-        // Parse status
-        let result;
-        try {
-          result = JSON.parse(status);
-        } catch (e) {
-          console.error("Error parsing status:", e);
-          return;
-        }
-        
-        // Update badge sisa kesempatan
-        if (result.sisaKesempatan !== undefined) {
-          sisaKesempatanCount.textContent = result.sisaKesempatan;
-          
-          if (result.sisaKesempatan > 0) {
-            sisaKesempatanBadge.style.background = 'var(--success)';
-            sisaKesempatanBadge.classList.remove('d-none');
-          } else if (result.sisaKesempatan === 0) {
-            sisaKesempatanBadge.style.background = 'var(--danger)';
-            sisaKesempatanBadge.classList.remove('d-none');
+      callGASFunction('cekStatusAbsensiHariIni', { nip: userData.nip })
+        .then(status => {
+          if (status.sisaKesempatan !== undefined) {
+            sisaKesempatanCount.textContent = status.sisaKesempatan;
+            
+            if (status.sisaKesempatan > 0) {
+              sisaKesempatanBadge.style.background = 'var(--success)';
+              sisaKesempatanBadge.classList.remove('d-none');
+            } else if (status.sisaKesempatan === 0) {
+              sisaKesempatanBadge.style.background = 'var(--danger)';
+              sisaKesempatanBadge.classList.remove('d-none');
+            }
           }
-        }
-        
-        // Update scanner message
-        if (result.totalAbsen >= 2) {
-          scannerMessage.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="font-size: 1.8rem; color: var(--success);">
-                <i class="fas fa-check-circle"></i>
+          
+          if (status.totalAbsen >= 2) {
+            scannerMessage.innerHTML = `
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 1.8rem; color: var(--success);">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <div>
+                  <p style="margin: 0; color: var(--success); font-weight: bold; font-size: 1.1rem;">
+                    Anda sudah absen 2 kali hari ini (lengkap)
+                  </p>
+                  <p style="margin: 5px 0 0 0; color: var(--gray); font-size: 0.95rem;">
+                    Pagi: ${status.waktuPagi || '-'} | Sore: ${status.waktuSore || '-'}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p style="margin: 0; color: var(--success); font-weight: bold; font-size: 1.1rem;">
-                  Anda sudah absen 2 kali hari ini (lengkap)
-                </p>
-                <p style="margin: 5px 0 0 0; color: var(--gray); font-size: 0.95rem;">
-                  Pagi: ${result.waktuPagi || '-'} | Sore: ${result.waktuSore || '-'}
-                </p>
-              </div>
-            </div>
-          `;
-          scannerMessage.classList.remove('d-none');
-        } else {
-          scannerMessage.classList.add('d-none');
-        }
-        
-      }).cekStatusAbsensiHariIni(userData.nip);
+            `;
+            scannerMessage.classList.remove('d-none');
+          } else {
+            scannerMessage.classList.add('d-none');
+          }
+        })
+        .catch(error => {
+          console.error("Error updating attendance status:", error);
+        });
     }
     
-    // Detect mobile device
+    function logoutUser() {
+      Swal.fire({
+        title: 'Konfirmasi Logout',
+        html: `Apakah Anda yakin ingin logout?<br><br>
+               <small>Data login akan dihapus dari perangkat ini.</small>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Logout',
+        confirmButtonColor: '#d33',
+        cancelButtonText: 'Batal',
+        cancelButtonColor: '#1976d2'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          clearInvalidUserData();
+          stopScanner();
+          updateUserInfo();
+          
+          showToast('success', 'Logout Berhasil', 'Data login telah dihapus dari perangkat')
+            .then(() => {
+              setTimeout(() => {
+                startScanner();
+              }, 500);
+            });
+        }
+      });
+    }
+    
+    // ============================================
+    // GAS FUNCTION CALLS
+    // ============================================
+    function callGASFunction(functionName, params = {}) {
+      return new Promise((resolve, reject) => {
+        // Add timestamp to prevent caching
+        params._t = new Date().getTime();
+        
+        const urlParams = new URLSearchParams();
+        urlParams.append('fn', functionName);
+        Object.keys(params).forEach(key => {
+          urlParams.append(key, params[key]);
+        });
+        
+        fetch(`${CONFIG.GAS_WEB_APP_URL}?${urlParams.toString()}`, {
+          method: 'GET',
+          mode: 'cors',
+          credentials: 'omit',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.text();
+        })
+        .then(text => {
+          try {
+            const data = JSON.parse(text);
+            resolve(data);
+          } catch (e) {
+            // If response is not JSON, return as text
+            resolve(text);
+          }
+        })
+        .catch(reject);
+      });
+    }
+    
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
     function isMobileDevice() {
       return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
     
-    // Adjust UI for mobile
     function adjustForMobile() {
       if (isMobileDevice()) {
         console.log("Mobile device detected - optimizing UI");
         
-        // Make buttons even larger on small phones
         if (window.innerWidth <= 360) {
           const buttons = document.querySelectorAll('.btn');
           buttons.forEach(btn => {
@@ -2609,7 +2261,6 @@
           });
         }
         
-        // Adjust scanner area height based on screen
         const scannerArea = document.querySelector('.scanner-area');
         if (scannerArea && window.innerHeight < 700) {
           scannerArea.style.minHeight = '55vh';
@@ -2617,217 +2268,269 @@
       }
     }
     
-    // PWA Installation Prompt
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      
-      // Show install prompt after delay
-      setTimeout(() => {
-        if (deferredPrompt && !localStorage.getItem('pwaPromptShown')) {
-          Swal.fire({
-            title: 'Pasang Aplikasi',
-            html: `<div style="text-align: center;">
-                     <div style="font-size: 3.5rem; color: #1976d2; margin-bottom: 15px;">
-                       <i class="fas fa-mobile-alt"></i>
-                     </div>
-                     <p style="font-size: 1.2rem;">Pasang aplikasi Absensi Apel ke home screen untuk akses lebih mudah?</p>
-                     <small style="font-size: 1rem;">Aplikasi dapat digunakan seperti aplikasi native tanpa perlu membuka browser.</small>
-                   </div>`,
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonText: 'Pasang Sekarang',
-            confirmButtonColor: '#1976d2',
-            cancelButtonText: 'Nanti Saja',
-            width: isMobileDevice() ? '90%' : '400px',
-            background: '#f8f9fa'
-          }).then((result) => {
-            if (result.isConfirmed && deferredPrompt) {
-              deferredPrompt.prompt();
-              deferredPrompt.userChoice.then((choiceResult) => {
-                localStorage.setItem('pwaPromptShown', 'true');
-                if (choiceResult.outcome === 'accepted') {
-                  console.log('User installed the PWA');
-                }
-                deferredPrompt = null;
-              });
-            } else {
-              localStorage.setItem('pwaPromptShown', 'true');
-            }
-          });
+    function handleVisibilityChange() {
+      if (!document.hidden && scannerScreen.classList.contains('d-none') === false) {
+        if (!isScannerRunning) {
+          setTimeout(startScanner, 1000);
         }
-      }, 5000);
-    });
+      }
+    }
     
-    // Handle resize for better mobile experience
+    function playScanSound() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 1200;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.15);
+      } catch (e) {
+        // Sound not supported, ignore
+      }
+    }
+    
+    function playSuccessSound() {
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator1 = audioContext.createOscillator();
+        const oscillator2 = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator1.connect(gainNode);
+        oscillator2.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator1.frequency.value = 523.25;
+        oscillator2.frequency.value = 659.25;
+        oscillator1.type = 'sine';
+        oscillator2.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.6);
+        
+        oscillator1.start(audioContext.currentTime);
+        oscillator2.start(audioContext.currentTime);
+        oscillator1.stop(audioContext.currentTime + 0.6);
+        oscillator2.stop(audioContext.currentTime + 0.6);
+      } catch (e) {
+        // Sound not supported, ignore
+      }
+    }
+    
+    // ============================================
+    // ERROR HANDLING FUNCTIONS
+    // ============================================
+    function handleLocationError(error) {
+      let errorMessage = "Gagal mengakses lokasi";
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage = "Izin lokasi ditolak. Aktifkan lokasi di pengaturan perangkat.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage = "Informasi lokasi tidak tersedia. Pastikan GPS aktif.";
+          break;
+        case error.TIMEOUT:
+          errorMessage = "Permintaan lokasi timeout. Periksa koneksi internet.";
+          break;
+      }
+      
+      Swal.fire({
+        icon: 'error',
+        title: errorMessage,
+        html: `Izinkan akses lokasi untuk melanjutkan absensi.<br><br>
+               <small>Absensi memerlukan verifikasi lokasi untuk validasi kehadiran.</small>`,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#1976d2'
+      }).then(() => {
+        startScanner();
+      });
+    }
+    
+    function showDeviceDuplicateError(result) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Perangkat Sudah Terdaftar',
+        html: `<div style="text-align: center;">
+                <p style="font-size: 1.1rem;">Perangkat ini sudah terdaftar atas nama:</p>
+                <div style="background: #ffebee; padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 5px solid #f44336;">
+                  <p style="font-size: 1.2rem; font-weight: bold;">${result.existingNama}</p>
+                  <p>NIP: ${result.existingNip}</p>
+                </div>
+                <p style="color: #f44336; font-size: 1rem;">
+                  <i class="fas fa-exclamation-triangle"></i> 
+                  Satu perangkat hanya untuk satu akun
+                </p>
+               </div>`,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#1976d2'
+      });
+    }
+    
+    function showNipDuplicateError(result, nip) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'NIP Sudah Terdaftar',
+        html: `<div style="text-align: center;">
+                <p style="font-size: 1.1rem;">NIP <strong>${nip}</strong> sudah terdaftar dengan perangkat lain</p>
+                <div style="background: #fff3e0; padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 5px solid #FF9800;">
+                  <p>Atas nama: <strong>${result.existingNama}</strong></p>
+                  <p>Device ID: ${result.existingDevice.substring(0, 20)}...</p>
+                </div>
+                <p style="font-size: 1rem;">
+                  Hubungi admin jika ini adalah perangkat baru Anda
+                </p>
+               </div>`,
+        confirmButtonText: 'Hubungi Admin',
+        confirmButtonColor: '#1976d2',
+        showCancelButton: true,
+        cancelButtonText: 'OK'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.open('https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20perlu%20bantuan%20reset%20perangkat%20untuk%20NIP%20' + nip, '_blank');
+        }
+      });
+    }
+    
+    function showRegistrationError(result) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validasi Gagal',
+        html: `<p style="font-size: 1.1rem;">${result.message}</p>
+               <small>Pastikan NIP Anda benar dan terdaftar di sistem</small>`,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#1976d2'
+      });
+    }
+    
+    function handleDeviceRegistrationError(response) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Perangkat Tidak Terdaftar',
+        html: `<p style="font-size: 1.1rem;">${response.message}</p>
+               <small>Perangkat Anda perlu didaftarkan ulang ke sistem.</small>`,
+        confirmButtonText: 'Daftar Ulang',
+        confirmButtonColor: '#1976d2'
+      }).then(() => {
+        clearInvalidUserData();
+        updateUserInfo();
+        showRegistrationScreen();
+      });
+    }
+    
+    function showAttendanceSuccess(response, jenis) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Absensi Berhasil!',
+        html: `<div style="text-align: center;">
+                 <div style="font-size: 4.5rem; color: #4CAF50; margin-bottom: 20px;">
+                   <i class="fas fa-check-circle"></i>
+                 </div>
+                 <h3 style="color: #2e7d32; font-size: 1.6rem;">${response.message}</h3>
+                 <div style="background: #f0f8ff; padding: 20px; border-radius: 12px; margin: 20px 0; text-align: left; font-size: 1.1rem;">
+                   <p><strong>Jenis Apel:</strong> ${jenis === 'pagi' ? 'Apel Pagi' : 'Apel Sore'}</p>
+                   <p><strong>Waktu:</strong> ${new Date().toLocaleTimeString('id-ID')}</p>
+                   <p><strong>Tanggal:</strong> ${new Date().toLocaleDateString('id-ID')}</p>
+                 </div>
+                 <p style="font-size: 1rem; color: #666;">Absensi telah tercatat di sistem</p>
+               </div>`,
+        confirmButtonText: 'Selesai',
+        confirmButtonColor: '#4CAF50',
+        allowOutsideClick: false,
+        width: isMobileDevice() ? '90%' : '500px',
+        background: '#f8f9fa'
+      }).then(() => {
+        updateStatusAbsensi();
+        startScanner();
+      });
+    }
+    
+    function showAttendanceError(response) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Absensi Gagal',
+        html: `<p style="font-size: 1.1rem;">${response.message}</p>
+               <small>Silakan scan ulang QR Code jika sudah sesuai ketentuan waktu dan lokasi.</small>`,
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#1976d2'
+      }).then(() => {
+        startScanner();
+      });
+    }
+    
+    function promptManualQRInput() {
+      Swal.fire({
+        title: 'Input QR Code Manual',
+        html: `<input type="text" id="manualQRInput" class="swal2-input" placeholder="Masukkan kode QR di sini" style="width: 80%; font-size: 1.1rem; padding: 15px;">`,
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Batal',
+        preConfirm: () => {
+          const qrCode = document.getElementById('manualQRInput').value;
+          if (!qrCode) {
+            Swal.showValidationMessage('Masukkan kode QR terlebih dahulu');
+            return false;
+          }
+          return qrCode;
+        }
+      }).then((result) => {
+        if (result.isConfirmed && result.value) {
+          onScanSuccess(result.value);
+        }
+      });
+    }
+    
+    // ============================================
+    // NOTIFICATION FUNCTIONS
+    // ============================================
+    function showToast(icon, title, text, timer = 2000) {
+      return Swal.fire({
+        icon: icon,
+        title: title,
+        text: text,
+        timer: timer,
+        showConfirmButton: false,
+        toast: true,
+        position: 'top'
+      });
+    }
+    
+    // ============================================
+    // RESIZE HANDLING
+    // ============================================
     let resizeTimeout;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(function() {
-        // Re-adjust for mobile on resize
         adjustForMobile();
         
-        // Restart scanner if needed
         if (!registerScreen.classList.contains('d-none') === false && isScannerRunning) {
           stopScanner();
           setTimeout(startScanner, 500);
         }
       }, 250);
     });
+    
+    // ============================================
+    // SERVICE WORKER REGISTRATION (PWA)
+    // ============================================
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }).catch(err => {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
   </script>
-  <!-- Tambahkan ini SEBELUM </body> -->
-<script>
-  // ====== GAS DEPLOYMENT CONFIG ======
-  // Ganti dengan URL Web Apps Anda setelah deploy
-  const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw9z7MUv6VXZnaWFO-ek82gJKmIcL8VGajH-Kx10wRkBFmk76VbsD5WxqFdUxop20x6/exec';
-  
-  // ====== AJAX HANDLER UNTUK GAS ======
-  function callGoogleScript(functionName, params = {}) {
-    return new Promise((resolve, reject) => {
-      // Tambahkan timestamp untuk menghindari cache
-      params._t = new Date().getTime();
-      
-      // Buat form data
-      const formData = new FormData();
-      Object.keys(params).forEach(key => {
-        formData.append(key, params[key]);
-      });
-      
-      // Kirim request ke GAS
-      fetch(`${GAS_WEB_APP_URL}?fn=${functionName}`, {
-        method: 'POST',
-        mode: 'no-cors', // Penting untuk Google Apps Script
-        body: formData
-      })
-      .then(response => {
-        // Karena 'no-cors', kita tidak bisa membaca response langsung
-        // Kita perlu menggunakan Google Apps Script dengan metode GET
-        callGoogleScriptGet(functionName, params)
-          .then(resolve)
-          .catch(reject);
-      })
-      .catch(reject);
-    });
-  }
-  
-  // Alternatif menggunakan GET (lebih reliable untuk GAS)
-  function callGoogleScriptGet(functionName, params = {}) {
-    return new Promise((resolve, reject) => {
-      // Build URL dengan parameters
-      const urlParams = new URLSearchParams();
-      urlParams.append('fn', functionName);
-      Object.keys(params).forEach(key => {
-        urlParams.append(key, params[key]);
-      });
-      
-      fetch(`${GAS_WEB_APP_URL}?${urlParams.toString()}`, {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'omit'
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.text();
-      })
-      .then(text => {
-        try {
-          const data = JSON.parse(text);
-          resolve(data);
-        } catch (e) {
-          // Jika response bukan JSON, return sebagai text
-          resolve(text);
-        }
-      })
-      .catch(reject);
-    });
-  }
-  
-  // ====== REPLACE google.script.run CALLS ======
-  // Simpan fungsi asli untuk fallback
-  const originalGoogleScriptRun = window.google?.script?.run;
-  
-  // Override jika tidak ada google.script.run (saat di hosting eksternal)
-  if (!window.google || !window.google.script) {
-    window.google = window.google || {};
-    window.google.script = window.google.script || {};
-    window.google.script.run = {
-      withSuccessHandler: function(callback) {
-        this.successCallback = callback;
-        return this;
-      },
-      withFailureHandler: function(callback) {
-        this.failureCallback = callback;
-        return this;
-      },
-      // Tambahkan semua fungsi yang dipanggil dari GAS
-      submitAbsen: function(nip, deviceId, jenis, lat, lon) {
-        return callGoogleScriptGet('submitAbsen', {
-          nip: nip,
-          deviceId: deviceId,
-          jenisApel: jenis,
-          latUser: lat,
-          lonUser: lon
-        })
-        .then(this.successCallback)
-        .catch(this.failureCallback);
-      },
-      
-      checkDuplicateRegistration: function(nip, deviceId) {
-        return callGoogleScriptGet('checkDuplicateRegistration', {
-          nip: nip,
-          deviceId: deviceId
-        })
-        .then(this.successCallback)
-        .catch(this.failureCallback);
-      },
-      
-      signupUser: function(nip, deviceId) {
-        return callGoogleScriptGet('signupUser', {
-          nip: nip,
-          deviceId: deviceId
-        })
-        .then(this.successCallback)
-        .catch(this.failureCallback);
-      },
-      
-      checkRegistrationStatus: function(deviceId) {
-        return callGoogleScriptGet('checkRegistrationStatus', {
-          deviceId: deviceId
-        })
-        .then(this.successCallback)
-        .catch(this.failureCallback);
-      },
-      
-      cekStatusAbsensiHariIni: function(nip) {
-        return callGoogleScriptGet('cekStatusAbsensiHariIni', {
-          nip: nip
-        })
-        .then(this.successCallback)
-        .catch(this.failureCallback);
-      },
-      
-      getRiwayatAbsensi: function(nip, limit) {
-        return callGoogleScriptGet('getRiwayatAbsensi', {
-          nip: nip,
-          limit: limit || 10
-        })
-        .then(this.successCallback)
-        .catch(this.failureCallback);
-      },
-      
-      // Tambahkan fungsi lain yang digunakan
-      getUserDataByDeviceId: function(deviceId) {
-        return callGoogleScriptGet('getUserDataByDeviceId', {
-          deviceId: deviceId
-        })
-        .then(this.successCallback)
-        .catch(this.failureCallback);
-      }
-    };
-  }
-</script>
 </body>
 </html>
